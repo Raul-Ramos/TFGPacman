@@ -27,7 +27,7 @@
 	
 	<!--------------------------------PATHS SETTINGS-------------------------------->
 	
-	<set name="BUILD_DIR" value="export" />
+	<set name="BUILD_DIR" value="D:\Pacman-Export" />
 	<classpath name="source" />
 	<assets path="assets" />
 	

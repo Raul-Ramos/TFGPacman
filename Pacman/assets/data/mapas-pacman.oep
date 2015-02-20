@@ -2,7 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <OgmoVersion>2.1.0.6</OgmoVersion>
   <Name>Pacman</Name>
-  <BackgroundColor A="255" R="125" G="160" B="255" />
+  <BackgroundColor A="255" R="64" G="0" B="0" />
   <GridColor A="255" R="255" G="240" B="90" />
   <LevelDefaultSize>
     <Width>1050</Width>
@@ -50,6 +50,18 @@
         <X>1</X>
         <Y>1</Y>
       </ScrollFactor>
+    </LayerDefinition>
+    <LayerDefinition xsi:type="TileLayerDefinition">
+      <Name>zonas</Name>
+      <Grid>
+        <Width>50</Width>
+        <Height>50</Height>
+      </Grid>
+      <ScrollFactor>
+        <X>1</X>
+        <Y>1</Y>
+      </ScrollFactor>
+      <ExportMode>CSV</ExportMode>
     </LayerDefinition>
   </LayerDefinitions>
   <Tilesets>

@@ -33,9 +33,12 @@ class PlayState extends FlxState
 		
 		_mWalls = _map.loadTilemap(AssetPaths.tileset__png, 50, 50, "paredes");
 		_mWalls.loadMap(_mWalls.getData(), AssetPaths.tileset__png, 50, 50, FlxTilemap.AUTO);
+		_mWalls.setTileProperties(1, FlxObject.NONE);
+		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
 		
-		pacman = new Pacman(50, 50);
+		pacman = new Pacman();
+		_map.loadEntities(placeEntities, "entidades");
 		add(pacman);
 	}
 	
@@ -54,5 +57,18 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-	}	
+		
+		FlxG.collide(pacman, _mWalls);
+	}
+	
+	private function placeEntities(entityName:String, entityData:Xml):Void
+	{
+		var x:Int = Std.parseInt(entityData.get("x"));
+		var y:Int = Std.parseInt(entityData.get("y"));
+		if (entityName == "pacman")
+		{
+			pacman.x = x;
+			pacman.y = y;
+		}
+	}
 }

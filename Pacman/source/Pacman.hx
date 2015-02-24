@@ -22,6 +22,9 @@ class Pacman extends FlxSprite
 		setFacingFlip(FlxObject.UP, false, false);
 		setFacingFlip(FlxObject.DOWN, false, false);
 		
+		setSize(37, 37); //39,39 en realidad
+		offset.set(4, 6);
+		
 	}
 	
 	override public function update():Void

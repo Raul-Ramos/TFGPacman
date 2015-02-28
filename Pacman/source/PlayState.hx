@@ -18,7 +18,7 @@ import flixel.FlxObject;
 class PlayState extends FlxState
 {
 	private var _map:FlxOgmoLoader;
-	private var _mWalls:FlxTilemap;
+	public var _mWalls:FlxTilemap; //TODO: toprivate
 	private var pacman:Pacman;
 	
 	/**

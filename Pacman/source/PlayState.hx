@@ -6,9 +6,9 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
-import Pacman;
+import flixel.util.FlxRect;
+import flixel.group.FlxTypedGroup;
 
-import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.tile.FlxTilemap;
 import flixel.FlxObject;
 
@@ -17,9 +17,11 @@ import flixel.FlxObject;
  */
 class PlayState extends FlxState
 {
-	private var _map:FlxOgmoLoader;
+	private var _map:CustomOgmoLoader;
 	public var _mWalls:FlxTilemap; //TODO: toprivate
+	
 	private var pacman:Pacman;
+	private var dots:FlxTypedGroup<Dot>;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -28,14 +30,25 @@ class PlayState extends FlxState
 	{
 		super.create();
 		
-		_map = new FlxOgmoLoader(AssetPaths.n1__oel);
-		trace(_map);
+		_map = new CustomOgmoLoader(AssetPaths.n1__oel);
 		
 		_mWalls = _map.loadTilemap(AssetPaths.tileset__png, 50, 50, "paredes");
 		_mWalls.loadMap(_mWalls.getData(), AssetPaths.tileset__png, 50, 50, FlxTilemap.AUTO);
 		_mWalls.setTileProperties(1, FlxObject.NONE);
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
+		
+		var zonas:Array<Int> = _map.getIntArrayValues("zonas");
+		var x, y:Float;
+		for (i in 0...zonas.length) {
+			if (zonas[i] == 3) {
+				x = i % _mWalls.widthInTiles;
+				y = Math.floor(i / _mWalls.widthInTiles);
+				var punto:Dot = new Dot((x * 50) + 21, (y * 50) + 21);
+				//dots.add(punto);
+				add(punto);
+			}
+		}
 		
 		pacman = new Pacman();
 		_map.loadEntities(placeEntities, "entidades");

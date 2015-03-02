@@ -9,6 +9,8 @@ import flixel.util.FlxMath;
 import flixel.util.FlxRect;
 import flixel.group.FlxTypedGroup;
 
+import flixel.util.FlxColor;
+
 import flixel.tile.FlxTilemap;
 import flixel.FlxObject;
 
@@ -54,6 +56,11 @@ class PlayState extends FlxState
 		pacman = new Pacman();
 		_map.loadEntities(placeEntities, "entidades");
 		add(pacman);
+		
+		var myText = new FlxText(0, 0, 500); // x, y, width
+		myText.text = "Highscore";
+		myText.setFormat(20, FlxColor.WHITE);
+		add(myText);
 	}
 	
 	/**

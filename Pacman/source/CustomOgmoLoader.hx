@@ -1,13 +1,56 @@
 package ;
 
+import flixel.FlxG;
+import haxe.xml.Fast;
+import haxe.xml.Parser;
+import openfl.Assets;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
+import flixel.tile.FlxTilemap;
 
 /**
  * ...
  * @author Goldy
  */
-class CustomOgmoLoader extends FlxOgmoLoader
+class CustomOgmoLoader
 {
+	private var _xml:Xml;
+	private var _fastXml:Fast;
+	
+	public function new(LevelData:Dynamic)
+	{
+		// Load xml file
+		var str:String = "";
+		// Passed embedded resource?
+		if (Std.is(LevelData, Class))
+		{
+			str = Type.createInstance(LevelData, []);
+		}
+		// Passed path to resource?
+		else if (Std.is(LevelData, String))
+		{
+			str = Assets.getText(LevelData);
+		}
+		_xml = Parser.parse(str);
+		_fastXml = new Fast(_xml.firstElement());
+	}	
+	
+	public function loadTilemap(TileGraphic:Dynamic, TileWidth:Int = 16, TileHeight:Int = 16, TileLayer:String = "tiles"):FlxTilemap
+	{
+	var tileMap:FlxTilemap = new FlxTilemap();
+	tileMap.loadMap(_fastXml.node.resolve(TileLayer).innerData, TileGraphic, TileWidth, TileHeight);
+	return tileMap;
+	}
+	
+	public function loadEntities(EntityLoadCallback:String->Xml->Void, EntityLayer:String = "entities"):Void
+	{
+	var actors = _fastXml.node.resolve(EntityLayer);
+	// Iterate over actors
+	for (a in actors.elements)
+	{
+	EntityLoadCallback(a.name, a.x);
+	}
+	}
+	
 	private function interpretarCSV(csv:String):Array<Int> {
 		// Figure out the map dimensions based on the data string
 		var _data:Array<Int> = new Array<Int>();

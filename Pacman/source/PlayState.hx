@@ -38,14 +38,15 @@ class PlayState extends FlxState
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
 		
+		dots = new FlxTypedGroup<Dot>();
 		var zonas:Array<Int> = _map.getIntArrayValues("zonas");
-		var x, y:Float;
+		var x,y:Float;
 		for (i in 0...zonas.length) {
 			if (zonas[i] == 3) {
 				x = i % _mWalls.widthInTiles;
 				y = Math.floor(i / _mWalls.widthInTiles);
 				var punto:Dot = new Dot((x * 50) + 21, (y * 50) + 21);
-				//dots.add(punto);
+				dots.add(punto);
 				add(punto);
 			}
 		}
@@ -72,6 +73,7 @@ class PlayState extends FlxState
 		super.update();
 		
 		FlxG.collide(pacman, _mWalls);
+		FlxG.overlap(pacman, dots, comerPunto);
 	}
 	
 	private function placeEntities(entityName:String, entityData:Xml):Void
@@ -83,5 +85,9 @@ class PlayState extends FlxState
 			pacman.x = x;
 			pacman.y = y;
 		}
+	}
+	
+	private function comerPunto(pacman:Pacman, dot:Dot):Void {
+		dot.kill();
 	}
 }

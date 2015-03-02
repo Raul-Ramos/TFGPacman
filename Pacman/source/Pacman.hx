@@ -11,14 +11,16 @@ import flixel.util.FlxAngle;
  */
 class Pacman extends FlxSprite
 {
-	var upCommand:Bool = false;
-	var downCommand:Bool = false;
-	var leftCommand:Bool = false;
-	var rightCommand:Bool = false;
+	private var upCommand:Bool = false;
+	private var downCommand:Bool = false;
+	private var leftCommand:Bool = false;
+	private var rightCommand:Bool = false;
 	
 	public function new(X:Float=0, Y:Float=0) 
 	{
 		super(X, Y);
+		
+		maxVelocity.x = 200;
 		
 		loadGraphic(AssetPaths.pacmanO__png, true, 50, 50);
 		
@@ -78,7 +80,7 @@ class Pacman extends FlxSprite
 				if (cast(FlxG.state, PlayState)._mWalls.getData()[((nowy - 1) * cast(FlxG.state, PlayState)._mWalls.widthInTiles) + nowx] == 0) {
 					upCommand = false;
 					this.velocity.x = 0;
-					this.velocity.y = -150;
+					this.velocity.y = -maxVelocity.x;
 					facing = FlxObject.UP;
 					angle = 90;
 				}
@@ -86,14 +88,14 @@ class Pacman extends FlxSprite
 				if (cast(FlxG.state, PlayState)._mWalls.getData()[((nowy + 1) * cast(FlxG.state, PlayState)._mWalls.widthInTiles) + nowx] == 0) {
 					downCommand = false;
 					this.velocity.x = 0;
-					this.velocity.y = 150;
+					this.velocity.y = maxVelocity.x;
 					facing = FlxObject.DOWN;
 					angle = -90;
 				}
 			} else if (rightCommand) {
 				if (cast(FlxG.state, PlayState)._mWalls.getData()[(nowy * cast(FlxG.state, PlayState)._mWalls.widthInTiles) + (nowx + 1)] == 0) {
 					rightCommand = false;
-					this.velocity.x = 150;
+					this.velocity.x = maxVelocity.x;
 					this.velocity.y = 0;
 					facing = FlxObject.RIGHT;
 					angle = 0;
@@ -101,7 +103,7 @@ class Pacman extends FlxSprite
 			} else {
 				if (cast(FlxG.state, PlayState)._mWalls.getData()[(nowy * cast(FlxG.state, PlayState)._mWalls.widthInTiles) + (nowx - 1)] == 0) {
 					leftCommand = false;
-					this.velocity.x = -150;
+					this.velocity.x = -maxVelocity.x;
 					this.velocity.y = 0;
 					facing = FlxObject.LEFT;
 					angle = 0;

@@ -25,6 +25,9 @@ class PlayState extends FlxState
 	private var pacman:Pacman;
 	private var dots:FlxTypedGroup<Dot>;
 	
+	private var scoreTxt:FlxText;
+	private var score:Int = 0;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -57,10 +60,18 @@ class PlayState extends FlxState
 		_map.loadEntities(placeEntities, "entidades");
 		add(pacman);
 		
-		var myText = new FlxText(0, 0, 500); // x, y, width
-		myText.text = "Highscore";
-		myText.setFormat(20, FlxColor.WHITE);
+		var myText = new FlxText((FlxG.width/2) - 50, -40, FlxG.width/2); // x, y, width
+		myText.text = "HIGHSCORE:";
+		myText.setFormat(20, FlxColor.WHITE, "right");
 		add(myText);
+		
+		scoreTxt = new FlxText(myText.x, -10, FlxG.width/2);
+		scoreTxt.text = Std.string(score);
+		scoreTxt.setFormat(20, FlxColor.WHITE, "right");
+		add(scoreTxt);
+		
+		FlxG.camera.setBounds(0, -50, 1050, 1200, true);
+		
 	}
 	
 	/**
@@ -96,5 +107,7 @@ class PlayState extends FlxState
 	
 	private function comerPunto(pacman:Pacman, dot:Dot):Void {
 		dot.kill();
+		score += 20;
+		scoreTxt.text = Std.string(score);
 	}
 }

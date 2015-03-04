@@ -60,6 +60,11 @@ class PlayState extends FlxState
 		_map.loadEntities(placeEntities, "entidades");
 		add(pacman);
 		
+		var fantasma:Fantasma = new Fantasma(200, 200);
+		add(fantasma);
+		fantasma = new Fantasma(250,200);
+		add(fantasma);
+		
 		FlxG.camera.setBounds(0, -50, 1050, 1200, true);
 		
 		var myText = new FlxText((FlxG.width/2) - 50, -40, FlxG.width/2); // x, y, width

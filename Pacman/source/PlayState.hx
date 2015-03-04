@@ -62,7 +62,11 @@ class PlayState extends FlxState
 		
 		var fantasma:Fantasma = new Fantasma(200, 200);
 		add(fantasma);
-		fantasma = new Fantasma(250,200);
+		fantasma = new Fantasma(250,200,"0xffff9cce");
+		add(fantasma);
+		fantasma = new Fantasma(300,200,"0xff31ffff");
+		add(fantasma);
+		fantasma = new Fantasma(350,200,"0xffffce31");
 		add(fantasma);
 		
 		FlxG.camera.setBounds(0, -50, 1050, 1200, true);

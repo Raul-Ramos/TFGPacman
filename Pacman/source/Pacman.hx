@@ -32,6 +32,9 @@ class Pacman extends FlxSprite
 		setSize(46, 46); //39,39 en realidad
 		//offset.set(4, 6);
 		
+		animation.add("eat", [0, 1, 2, 1], 20, true);
+		animation.play("eat");
+		animation.pause();
 	}
 	
 	override public function update():Void
@@ -40,6 +43,17 @@ class Pacman extends FlxSprite
 		
 		orderMovement();
 		move();
+		
+		if (!animation.paused) {
+			if (velocity.x == 0 && velocity.y == 0) {
+				animation.get("eat").play(true, 0);
+				animation.pause();
+			}
+		} else {
+			if ( velocity.x != 0 || velocity.y != 0 ) {
+				animation.play("eat");
+			}
+		}
 	}
 	
 	private function orderMovement():Void

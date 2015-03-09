@@ -82,12 +82,9 @@ class PlayState extends FlxState
 		scoreTxt.setFormat(20, FlxColor.WHITE, "right");
 		add(scoreTxt);
 		
-		var inicio:FlxPoint = new FlxPoint(1, 1);
-		//trace(_mWalls.widthInTiles, _mWalls.heightInTiles);
-		//trace(_mWalls.getData().toString());
-		var final:FlxPoint = new FlxPoint(19, 20);
-		//var FINAL:FlxPoint = new FlxPoint(
-		Pathfinding.astar(inicio, final, _mWalls.getData());
+		var inicio:FlxPoint = new FlxPoint(1,1);
+		var final:FlxPoint = new FlxPoint(19,20);
+		trace(Pathfinding.astar(inicio, final, _mWalls.getData()));
 	}
 	
 	/**

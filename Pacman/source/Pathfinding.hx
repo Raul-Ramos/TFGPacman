@@ -8,7 +8,7 @@ import haxe.ds.Vector;
  */
 class Pathfinding
 {
-	static public function astar(inicio:FlxPoint, final:FlxPoint, mapa:Array<Int>):Void
+	static public function astar(inicio:FlxPoint, final:FlxPoint, mapa:Array<Int>):String
 	{
 		var abiertos:Array<Nodo> = new Array<Nodo>();
 		var cerrados:Array<Nodo> = new Array<Nodo>();
@@ -31,11 +31,11 @@ class Pathfinding
 		var found:Bool;
 		while (abiertos.length > 0) {
 			
-			var se:String = "";
+			/*var se:String = "";
 			for (i in abiertos) {
 				se += "[" + i.x + "," + i.y + "," + i.costeH + "]";
 			}
-			trace(se);
+			trace(se);*/
 			
 			//Seleccion del mejor nodo abierto
 			var nodoT = abiertos[0];
@@ -45,10 +45,11 @@ class Pathfinding
 				}
 			}
 			
+			//trace("tomado: " + nodoT.x, nodoT.y, nodoT.costeH);
+			
 			//Si es la solucion
 			if (nodoT.x == finalX && nodoT.y == finalY) {
-				devolverCamino(nodoT);
-				break;
+				return devolverCamino(nodoT);
 			}
 			
 			abiertos.remove(nodoT);
@@ -74,8 +75,7 @@ class Pathfinding
 					//Especial de Pacman
 					//Si la pared es el objetivo, esta es la solución
 					if (x == finalX && y == finalY) {
-						devolverCamino(nodoT);
-						break;
+						return devolverCamino(nodoT);
 					} else {
 						continue;
 					}
@@ -94,13 +94,15 @@ class Pathfinding
 				}
 				
 				//distancia euclidiana
-				eucli = Math.sqrt(((finalX - x) * (finalY - x)) + ((finalY - y) * (finalY - y)));
+				eucli = Math.sqrt(((finalX - x) * (finalX - x)) + ((finalY - y) * (finalY - y)));
 				
+				//Quizá nunca hay substitucion
 				nodoA = null;
 				for (i in abiertos) {
 					if (i.x == x && i.y == y) {
 						if (i.costeH > nodoT.coste + 1 + eucli) {
 							nodoA = i;
+							trace("subs");
 						} else {
 							found = true;
 						}
@@ -126,18 +128,17 @@ class Pathfinding
 				}
 			}
 		}
-		trace("boh");
+		return null;
 	}
 	
-	static private function devolverCamino(nodoF:Nodo):Void {
+	static private function devolverCamino(nodoF:Nodo):String {
 		var nodoP:Nodo = nodoF;
 		var f:String = "";
 		while (nodoP != null) {
 			f = nodoP.x + "," + nodoP.y + "->" + f;
 			nodoP = nodoP.padre;
 		}
-		trace(f);
-		return null;
+		return f;
 	}
 }
 

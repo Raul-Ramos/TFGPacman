@@ -3,6 +3,8 @@ package ;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 
+import Modulo.TipoIA;
+
 /**
  * ...
  * @author Goldy
@@ -11,10 +13,13 @@ class Fantasma extends FlxSpriteGroup
 {
 	private var base:FlxSprite;
 	private var ojos:FlxSprite;
+	private var ia:Modulo;
 
-	public function new(X:Float=0, Y:Float=0, colorF:String = null) 
+	public function new(X:Float = 0, Y:Float = 0, moduloIa:Modulo.Modulo, colorF:String = null) 
 	{
 		super(X, Y);
+		
+		this.ia = moduloIa;
 		
 		base = new FlxSprite();
 		ojos = new FlxSprite();

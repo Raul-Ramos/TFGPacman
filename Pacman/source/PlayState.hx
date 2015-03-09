@@ -14,6 +14,8 @@ import flixel.util.FlxColor;
 import flixel.tile.FlxTilemap;
 import flixel.FlxObject;
 
+import Modulo.TipoIA;
+
 /**
  * A FlxState which can be used for the actual gameplay.
  */
@@ -24,6 +26,8 @@ class PlayState extends FlxState
 	
 	private var pacman:Pacman;
 	private var dots:FlxTypedGroup<Dot>;
+	private var gFantasmas:GestorFantasmas;
+	
 	
 	private var scoreTxt:FlxText;
 	private var score:Int = 0;
@@ -60,14 +64,9 @@ class PlayState extends FlxState
 		_map.loadEntities(placeEntities, "entidades");
 		add(pacman);
 		
-		var fantasma:Fantasma = new Fantasma(200, 200);
-		add(fantasma);
-		fantasma = new Fantasma(250,200,"0xffff9cce");
-		add(fantasma);
-		fantasma = new Fantasma(300,200,"0xff31ffff");
-		add(fantasma);
-		fantasma = new Fantasma(350,200,"0xffffce31");
-		add(fantasma);
+		gFantasmas = new GestorFantasmas(0, 0, 4);
+		add(gFantasmas);
+		gFantasmas.nuevoFantasma(0, 0, Modulo.TipoIA.Blinky);
 		
 		FlxG.camera.setBounds(0, -50, 1050, 1200, true);
 		

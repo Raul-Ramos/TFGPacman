@@ -6,6 +6,7 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
+import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.group.FlxTypedGroup;
 
@@ -15,6 +16,7 @@ import flixel.tile.FlxTilemap;
 import flixel.FlxObject;
 
 import Modulo.TipoIA;
+import Pathfinding;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -79,6 +81,13 @@ class PlayState extends FlxState
 		scoreTxt.text = Std.string(score);
 		scoreTxt.setFormat(20, FlxColor.WHITE, "right");
 		add(scoreTxt);
+		
+		var inicio:FlxPoint = new FlxPoint(1, 1);
+		//trace(_mWalls.widthInTiles, _mWalls.heightInTiles);
+		//trace(_mWalls.getData().toString());
+		var final:FlxPoint = new FlxPoint(19, 20);
+		//var FINAL:FlxPoint = new FlxPoint(
+		Pathfinding.astar(inicio, final, _mWalls.getData());
 	}
 	
 	/**

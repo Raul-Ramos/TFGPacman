@@ -1,6 +1,7 @@
 package ;
 
 import flixel.FlxSprite;
+import flixel.FlxObject;
 import flixel.group.FlxSpriteGroup;
 
 import Modulo.TipoIA;
@@ -21,6 +22,7 @@ class Fantasma extends FlxSpriteGroup
 	{
 		super(X, Y);
 		
+		moduloIa.setFantasma(this);
 		this.ia = moduloIa;
 		
 		base = new FlxSprite();
@@ -36,7 +38,8 @@ class Fantasma extends FlxSpriteGroup
 		add(base);
 		add(ojos);
 		
-		this.velocity.x = 50;
+		this.velocity.x = 25;
+		this.facing = FlxObject.RIGHT;
 	}
 	
 	override public function update():Void
@@ -46,9 +49,13 @@ class Fantasma extends FlxSpriteGroup
 		if(this.getMidpoint().x % 50 >= 23 && this.getMidpoint().x % 50 <= 27
 		&& this.getMidpoint().y % 50 >= 23 && this.getMidpoint().y % 50 <= 27) {
 			if (!pasoDecidido) {
+					//Decide el paso
 					pasoDecidido = true;
+					trace("facing" + this.facing);
+					ia.movimientoRegular();
 				}
 		}else if(pasoDecidido){
+			//Permite decidir el paso
 			pasoDecidido = false;
 		}
 		

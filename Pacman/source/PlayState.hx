@@ -66,7 +66,7 @@ class PlayState extends FlxState
 		_map.loadEntities(placeEntities, "entidades");
 		add(pacman);
 		
-		gFantasmas = new GestorFantasmas(0, 0, 4);
+		gFantasmas = new GestorFantasmas(0, 0, _mWalls.getData(), 4);
 		add(gFantasmas);
 		gFantasmas.nuevoFantasma(50, 50, Modulo.TipoIA.Blinky);
 		

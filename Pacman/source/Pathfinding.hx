@@ -71,7 +71,7 @@ class Pathfinding
 				}
 				
 				//Revisa que no sea pared
-				if (mapa[(y * 21) + x] != 0) {
+				if (mapa[(y * 21) + x] != 0) { //TODO: Mejor que poner 21 directamente
 					//Especial de Pacman
 					//Si la pared es el objetivo, esta es la solución
 					if (x == finalX && y == finalY) {

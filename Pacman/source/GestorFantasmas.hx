@@ -32,7 +32,7 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 		var modulo:Modulo;
 		
 		switch(tipo) {
-			case TipoIA.Blinky: modulo = new ModuloBlinky(mapa);
+			case TipoIA.Blinky: modulo = new ModuloBlinky(mapa,"miau");
 		}
 		
 		fantasma = new Fantasma(xf, yf, modulo);

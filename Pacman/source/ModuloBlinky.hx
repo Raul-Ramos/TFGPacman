@@ -1,4 +1,5 @@
 package ;
+import flixel.FlxObject;
 
 /**
  * ...
@@ -26,23 +27,59 @@ class ModuloBlinky implements Modulo
 		return null;
 	}
 	
-	public function movimientoRegular():Void 
+	public function movimientoRegular():Int
 	{
 		if (fantasma == null) {
-			//TODO: return null
+			return FlxObject.NONE;
 		}
 		
 		//Casillas
 		var fy:Int = Math.floor(fantasma.getMidpoint().y/50); 
-		var fx:Int = Math.floor(fantasma.getMidpoint().x/50);
+		var fx:Int = Math.floor(fantasma.getMidpoint().x / 50);
+		
+		var up:Bool;
+		var down:Bool;
+		var left:Bool;
+		var right:Bool;
 		var caminosLibres:Int = 0;
 		
-		if (mapa[(fy * 21) + 1 + fx] == 0) caminosLibres += 1;
-		if (mapa[(fy * 21) - 1 + fx] == 0) caminosLibres += 1;
-		if (mapa[((fy + 1) * 21) + fx] == 0) caminosLibres += 1;
-		if (mapa[((fy - 1) * 21) + fx] == 0) caminosLibres += 1;
+		//TODO: Mejor que 21 directamente
+		if (mapa[(fy * 21) + 1 + fx] == 0){ caminosLibres++; right = true;}
+		else { right = false;}
+		if (mapa[(fy * 21) - 1 + fx] == 0){ caminosLibres++; left = true;}
+		else { left = false;}
+		if (mapa[((fy + 1) * 21) + fx] == 0) { caminosLibres++; down = true; }
+		else { down = false;}
+		if (mapa[((fy - 1) * 21) + fx] == 0) { caminosLibres++; up = true; }
+		else { up = false; }
 		
-		trace(caminosLibres); //TODO: Mejor que 21 directamente
+		if (caminosLibres == 1) {
+			if (up) {
+				return FlxObject.UP;
+			} else if (down) {
+				return FlxObject.DOWN;
+			} else if (left) {
+				return FlxObject.LEFT;
+			} else {
+				return FlxObject.RIGHT;
+			}
+		} else {
+			var facing:Int = fantasma.facing;
+			
+			if (caminosLibres == 2) {
+				if (up && facing!=FlxObject.DOWN) {
+					return FlxObject.UP;
+				} else if (down && facing!=FlxObject.UP) {
+					return FlxObject.DOWN;
+				} else if (left && facing!=FlxObject.RIGHT) {
+					return FlxObject.LEFT;
+				} else {
+					return FlxObject.RIGHT;
+				}
+			}
+		}
+		
+		return FlxObject.NONE;
 		
 	}
 	

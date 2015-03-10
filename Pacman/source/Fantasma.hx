@@ -51,8 +51,7 @@ class Fantasma extends FlxSpriteGroup
 			if (!pasoDecidido) {
 					//Decide el paso
 					pasoDecidido = true;
-					trace("facing" + this.facing);
-					ia.movimientoRegular();
+					trace(ia.movimientoRegular());
 				}
 		}else if(pasoDecidido){
 			//Permite decidir el paso

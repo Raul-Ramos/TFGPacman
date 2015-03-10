@@ -13,7 +13,9 @@ class Fantasma extends FlxSpriteGroup
 {
 	private var base:FlxSprite;
 	private var ojos:FlxSprite;
+	
 	private var ia:Modulo;
+	private var pasoDecidido:Bool = false;
 
 	public function new(X:Float = 0, Y:Float = 0, moduloIa:Modulo.Modulo, colorF:String = null) 
 	{
@@ -33,5 +35,22 @@ class Fantasma extends FlxSpriteGroup
 		
 		add(base);
 		add(ojos);
+		
+		this.velocity.x = 50;
+	}
+	
+	override public function update():Void
+	{
+		super.update();
+		
+		if(this.getMidpoint().x % 50 >= 23 && this.getMidpoint().x % 50 <= 27
+		&& this.getMidpoint().y % 50 >= 23 && this.getMidpoint().y % 50 <= 27) {
+			if (!pasoDecidido) {
+					pasoDecidido = true;
+				}
+		}else if(pasoDecidido){
+			pasoDecidido = false;
+		}
+		
 	}
 }

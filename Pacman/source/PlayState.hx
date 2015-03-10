@@ -68,7 +68,7 @@ class PlayState extends FlxState
 		
 		gFantasmas = new GestorFantasmas(0, 0, 4);
 		add(gFantasmas);
-		gFantasmas.nuevoFantasma(0, 0, Modulo.TipoIA.Blinky);
+		gFantasmas.nuevoFantasma(50, 50, Modulo.TipoIA.Blinky);
 		
 		FlxG.camera.setBounds(0, -50, 1050, 1200, true);
 		
@@ -84,7 +84,6 @@ class PlayState extends FlxState
 		
 		var inicio:FlxPoint = new FlxPoint(1,1);
 		var final:FlxPoint = new FlxPoint(19,20);
-		trace(Pathfinding.astar(inicio, final, _mWalls.getData()));
 	}
 	
 	/**

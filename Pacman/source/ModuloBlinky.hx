@@ -1,6 +1,7 @@
 package ;
 
 import flixel.FlxObject;
+import Pathfinding;
 
 /**
  * ...
@@ -28,63 +29,6 @@ class ModuloBlinky extends Modulo
 		var xthis:Int = Math.floor(fantasma.getMidpoint().x / 50);
 		var ythis:Int = Math.floor(fantasma.getMidpoint().y / 50);
 		
-		var mejorOpcion:Int = FlxObject.NONE;
-		var mejorDistancia:Float = 0;
-		var distancia:Float;
-		var posX:Int = xthis;
-		var posY:Int = ythis - 1;
-		
-		//IMPORTANTE: Esta parte está preparada para dar
-		//preferencia, en este orden, a up, left, down, right.
-		//Así se procesa en el modelo original, no cambiar.
-		
-		//Arriba
-		if (facing != FlxObject.DOWN && mapa[posY][posX] == 0) {
-			mejorOpcion = FlxObject.UP;
-			mejorDistancia = Math.sqrt(((xpac - posX) * (xpac - posX)) + 
-			((ypac - posY) * (ypac - posY)));
-		}
-		
-		//Izquierda
-		posX -= 1;
-		posY += 1;
-		if (facing != FlxObject.RIGHT && mapa[posY][posX] == 0) {
-			distancia = Math.sqrt(((xpac - posX) * (xpac - posX)) + 
-			((ypac - posY) * (ypac - posY)));
-			
-			if (mejorOpcion == FlxObject.NONE ||
-			(mejorOpcion == FlxObject.UP && distancia < mejorDistancia)) {
-				mejorOpcion = FlxObject.LEFT;
-				mejorDistancia = distancia;
-			}
-		}
-		
-		//Abajo
-		posX += 1;
-		posY += 1;
-		if (facing != FlxObject.UP && mapa[posY][posX] == 0) {
-			distancia = Math.sqrt(((xpac - posX) * (xpac - posX)) + 
-			((ypac - posY) * (ypac - posY)));
-			
-			if (mejorOpcion == FlxObject.NONE || 
-			(mejorOpcion!=FlxObject.NONE && distancia < mejorDistancia)) {
-				mejorOpcion = FlxObject.DOWN;
-				mejorDistancia = distancia;
-			}
-		}
-		
-		//Derecha
-		posX += 1;
-		posY -= 1;
-		if (facing != FlxObject.LEFT && mapa[posY][posX] == 0) {
-			distancia = Math.sqrt(((xpac - posX) * (xpac - posX)) + 
-			((ypac - posY) * (ypac - posY)));
-			
-			if (distancia < mejorDistancia) {
-				mejorOpcion = FlxObject.RIGHT;
-			}
-		}
-		
-		return mejorOpcion;
+		return Pathfinding.metodoTradicional(mapa, xthis, ythis, xpac, ypac, facing);
 	}
 }

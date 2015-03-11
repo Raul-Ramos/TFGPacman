@@ -1,13 +1,76 @@
 package ;
 import flixel.util.FlxPoint;
 import haxe.ds.Vector;
+import flixel.FlxObject;
 
 /**
  * ...
  * @author Goldy
  */
 class Pathfinding
-{
+{	
+	//Lo mismo esto está mejor como una funcion privada de una clase padre de los fantasmas comunes. Qué se yo.
+	static public function metodoTradicional(mapa:Array<Array<Int>>, oriX:Int, oriY:Int, desX:Int, desY:Int, facing:Int):Int {
+		var mejorOpcion:Int = FlxObject.NONE;
+		var mejorDistancia:Float = 0;
+		var distancia:Float;
+		var posX:Int = oriX;
+		var posY:Int = oriY - 1;
+		
+		//IMPORTANTE: Esta parte está preparada para dar
+		//preferencia, en este orden, a up, left, down, right.
+		//Así se procesa en el modelo original, no cambiar.
+		
+		//Arriba
+		if (facing != FlxObject.DOWN && mapa[posY][posX] == 0) {
+			mejorOpcion = FlxObject.UP;
+			mejorDistancia = Math.sqrt(((desX - posX) * (desX - posX)) + 
+			((desY - posY) * (desY - posY)));
+		}
+		
+		//Izquierda
+		posX -= 1;
+		posY += 1;
+		if (facing != FlxObject.RIGHT && mapa[posY][posX] == 0) {
+			distancia = Math.sqrt(((desX - posX) * (desX - posX)) + 
+			((desY - posY) * (desY - posY)));
+			
+			if (mejorOpcion == FlxObject.NONE ||
+			(mejorOpcion == FlxObject.UP && distancia < mejorDistancia)) {
+				mejorOpcion = FlxObject.LEFT;
+				mejorDistancia = distancia;
+			}
+		}
+		
+		//Abajo
+		posX += 1;
+		posY += 1;
+		if (facing != FlxObject.UP && mapa[posY][posX] == 0) {
+			distancia = Math.sqrt(((desX - posX) * (desX - posX)) + 
+			((desY - posY) * (desY - posY)));
+			
+			if (mejorOpcion == FlxObject.NONE || 
+			(mejorOpcion!=FlxObject.NONE && distancia < mejorDistancia)) {
+				mejorOpcion = FlxObject.DOWN;
+				mejorDistancia = distancia;
+			}
+		}
+		
+		//Derecha
+		posX += 1;
+		posY -= 1;
+		if (facing != FlxObject.LEFT && mapa[posY][posX] == 0) {
+			distancia = Math.sqrt(((desX - posX) * (desX - posX)) + 
+			((desY - posY) * (desY - posY)));
+			
+			if (distancia < mejorDistancia) {
+				mejorOpcion = FlxObject.RIGHT;
+			}
+		}
+		
+		return mejorOpcion;
+	}
+	
 	static public function astar(inicio:FlxPoint, final:FlxPoint, mapa:Array<Array<Int>>):String
 	{
 		var abiertos:Array<Nodo> = new Array<Nodo>();

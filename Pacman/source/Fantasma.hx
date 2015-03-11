@@ -38,25 +38,45 @@ class Fantasma extends FlxSpriteGroup
 		add(base);
 		add(ojos);
 		
-		this.velocity.x = 25;
-		this.facing = FlxObject.RIGHT;
+		maxVelocity.x = maxVelocity.y = 150;
+		velocity.x = maxVelocity.x;
+		facing = FlxObject.RIGHT;
 	}
 	
 	override public function update():Void
 	{
 		super.update();
 		
-		if(this.getMidpoint().x % 50 >= 23 && this.getMidpoint().x % 50 <= 27
-		&& this.getMidpoint().y % 50 >= 23 && this.getMidpoint().y % 50 <= 27) {
+		if(getMidpoint().x % 50 >= 23 && getMidpoint().x % 50 <= 27
+		&& getMidpoint().y % 50 >= 23 && getMidpoint().y % 50 <= 27) {
 			if (!pasoDecidido) {
-					//Decide el paso
-					pasoDecidido = true;
-					trace(ia.movimientoRegular());
+				
+				//Decide el paso
+				facing = ia.movimientoRegular();
+					
+				switch(facing) {
+					case FlxObject.UP:
+						velocity.x = 0;
+						velocity.y = -maxVelocity.y;
+					case FlxObject.RIGHT:
+						velocity.x = maxVelocity.x;
+						velocity.y = 0;
+					case FlxObject.DOWN:
+						velocity.x = 0;
+						velocity.y = maxVelocity.y;
+					case FlxObject.LEFT:
+						velocity.x = -maxVelocity.x;
+						velocity.y = 0;
+					default:
+						velocity.x = velocity.y = 0;
 				}
+					
+				//Se indica que el paso ha sido tomado
+				pasoDecidido = true;
+			}
 		}else if(pasoDecidido){
 			//Permite decidir el paso
 			pasoDecidido = false;
 		}
-		
 	}
 }

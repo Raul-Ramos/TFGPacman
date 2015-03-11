@@ -75,6 +75,8 @@ class Modulo
 				} else {
 					return FlxObject.RIGHT;
 				}
+			} else if (caminosLibres != 0){
+				return decidirCamino(facing);
 			}
 		}
 		
@@ -82,6 +84,9 @@ class Modulo
 		
 	}
 	
+	private function decidirCamino(facing:Int):Int {
+		return FlxObject.NONE;
+	}
 	
 	//TODO: ¿movimientoRegular lo decide todo?
 	public function movimientoPanico():Void 

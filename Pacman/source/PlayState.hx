@@ -66,8 +66,19 @@ class PlayState extends FlxState
 		_map.loadEntities(placeEntities, "entidades");
 		add(pacman);
 		
-		//TODO: En realidad sería genial tener esto como matriz de dos dimensiones
-		gFantasmas = new GestorFantasmas(_mWalls.getData(), pacman, 4);
+		//Crea matriz bidimensional con los datos de las paredes
+		var fila:Array<Int>;
+		var valorParedes:Array<Array<Int>> = new Array<Array<Int>>();
+		var unidimensional:Array<Int> = _mWalls.getData();
+		for (f in 0..._mWalls.heightInTiles) {
+			fila = new Array<Int>();
+			for (c in 0..._mWalls.widthInTiles) {
+				fila[c] = unidimensional[(f * _mWalls.widthInTiles) + c];
+			}
+			valorParedes[f] = fila;
+		}
+		
+		gFantasmas = new GestorFantasmas(valorParedes, pacman, 4);
 		add(gFantasmas);
 		gFantasmas.nuevoFantasma(50, 50, Modulo.TipoIA.Blinky);
 		

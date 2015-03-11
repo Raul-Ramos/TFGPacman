@@ -8,7 +8,7 @@ import haxe.ds.Vector;
  */
 class Pathfinding
 {
-	static public function astar(inicio:FlxPoint, final:FlxPoint, mapa:Array<Int>):String
+	static public function astar(inicio:FlxPoint, final:FlxPoint, mapa:Array<Array<Int>>):String
 	{
 		var abiertos:Array<Nodo> = new Array<Nodo>();
 		var cerrados:Array<Nodo> = new Array<Nodo>();
@@ -71,7 +71,7 @@ class Pathfinding
 				}
 				
 				//Revisa que no sea pared
-				if (mapa[(y * 21) + x] != 0) { //TODO: Mejor que poner 21 directamente
+				if (mapa[y][x] != 0) {
 					//Especial de Pacman
 					//Si la pared es el objetivo, esta es la solución
 					if (x == finalX && y == finalY) {

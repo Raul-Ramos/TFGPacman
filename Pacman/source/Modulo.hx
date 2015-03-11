@@ -8,10 +8,10 @@ import flixel.FlxObject;
 class Modulo
 {
 	private var fantasma:Fantasma = null;
-	private var mapa:Array<Int>;
+	private var mapa:Array<Array<Int>>;
 	private var color:String = null;
 	
-	public function new(mapa:Array<Int>) 
+	public function new(mapa:Array<Array<Int>>) 
 	{
 		this.mapa = mapa;
 	}
@@ -34,7 +34,7 @@ class Modulo
 		
 		//Casillas
 		var fy:Int = Math.floor(fantasma.getMidpoint().y/50); 
-		var fx:Int = Math.floor(fantasma.getMidpoint().x / 50);
+		var fx:Int = Math.floor(fantasma.getMidpoint().x/50);
 		
 		var up:Bool;
 		var down:Bool;
@@ -42,14 +42,13 @@ class Modulo
 		var right:Bool;
 		var caminosLibres:Int = 0;
 		
-		//TODO: Mejor que 21 directamente
-		if (mapa[(fy * 21) + 1 + fx] == 0){ caminosLibres++; right = true;}
+		if (mapa[fy][fx + 1] == 0){ caminosLibres++; right = true;}
 		else { right = false;}
-		if (mapa[(fy * 21) - 1 + fx] == 0){ caminosLibres++; left = true;}
+		if (mapa[fy][fx - 1] == 0){ caminosLibres++; left = true;}
 		else { left = false;}
-		if (mapa[((fy + 1) * 21) + fx] == 0) { caminosLibres++; down = true; }
+		if (mapa[fy + 1][fx] == 0) { caminosLibres++; down = true; }
 		else { down = false;}
-		if (mapa[((fy - 1) * 21) + fx] == 0) { caminosLibres++; up = true; }
+		if (mapa[fy - 1][fx] == 0) { caminosLibres++; up = true; }
 		else { up = false; }
 		
 		if (caminosLibres == 1) {

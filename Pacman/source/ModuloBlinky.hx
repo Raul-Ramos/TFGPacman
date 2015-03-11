@@ -10,7 +10,7 @@ class ModuloBlinky extends Modulo
 {
 	private var pacman:Pacman;
 	
-	public function new(mapa:Array<Int>, pacman:Pacman) {
+	public function new(mapa:Array<Array<Int>>, pacman:Pacman) {
 		super(mapa);
 		this.pacman = pacman;
 	}
@@ -19,8 +19,7 @@ class ModuloBlinky extends Modulo
 	
 	override private function decidirCamino(facing:Int):Int {
 		
-		//TODO: Mejor que 21 directamente
-		//TODO: Y que 50, en realidad
+		//TODO: Evitarse el 50
 		//TODO: Lo mismo si pacman tiene funcion que devuelva
 		//posición en la tabla sale mas a cuenta
 		var xpac:Int = Math.floor(pacman.getMidpoint().x / 50);
@@ -39,10 +38,8 @@ class ModuloBlinky extends Modulo
 		//preferencia, en este orden, a up, left, down, right.
 		//Así se procesa en el modelo original, no cambiar.
 		
-		trace(FlxObject.UP, FlxObject.DOWN, FlxObject.RIGHT, FlxObject.LEFT);
-		
 		//Arriba
-		if (facing != FlxObject.DOWN && mapa[(posY * 21) + posX] == 0) {
+		if (facing != FlxObject.DOWN && mapa[posY][posX] == 0) {
 			mejorOpcion = FlxObject.UP;
 			mejorDistancia = Math.sqrt(((xpac - posX) * (xpac - posX)) + 
 			((ypac - posY) * (ypac - posY)));
@@ -51,7 +48,7 @@ class ModuloBlinky extends Modulo
 		//Izquierda
 		posX -= 1;
 		posY += 1;
-		if (facing != FlxObject.RIGHT && mapa[(posY * 21) + posX] == 0) {
+		if (facing != FlxObject.RIGHT && mapa[posY][posX] == 0) {
 			distancia = Math.sqrt(((xpac - posX) * (xpac - posX)) + 
 			((ypac - posY) * (ypac - posY)));
 			
@@ -65,7 +62,7 @@ class ModuloBlinky extends Modulo
 		//Abajo
 		posX += 1;
 		posY += 1;
-		if (facing != FlxObject.UP && mapa[(posY * 21) + posX] == 0) {
+		if (facing != FlxObject.UP && mapa[posY][posX] == 0) {
 			distancia = Math.sqrt(((xpac - posX) * (xpac - posX)) + 
 			((ypac - posY) * (ypac - posY)));
 			
@@ -79,7 +76,7 @@ class ModuloBlinky extends Modulo
 		//Derecha
 		posX += 1;
 		posY -= 1;
-		if (facing != FlxObject.LEFT && mapa[(posY * 21) + posX] == 0) {
+		if (facing != FlxObject.LEFT && mapa[posY][posX] == 0) {
 			distancia = Math.sqrt(((xpac - posX) * (xpac - posX)) + 
 			((ypac - posY) * (ypac - posY)));
 			
@@ -87,8 +84,6 @@ class ModuloBlinky extends Modulo
 				mejorOpcion = FlxObject.RIGHT;
 			}
 		}
-		
-		trace(mejorOpcion);
 		
 		return mejorOpcion;
 	}

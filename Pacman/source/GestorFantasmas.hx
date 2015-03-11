@@ -9,10 +9,10 @@ import Modulo.TipoIA;
  */
 class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 {
-	private var mapa:Array<Int>;
+	private var mapa:Array<Array<Int>>;
 	private var pacman:Pacman;
 	
-	public function new(mapa:Array<Int>, pacman:Pacman, MaxSize:Int=4) 
+	public function new(mapa:Array<Array<Int>>, pacman:Pacman, MaxSize:Int=4) 
 	{
 		super(0, 0, MaxSize);
 		

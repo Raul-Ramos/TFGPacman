@@ -11,16 +11,19 @@ import flixel.util.FlxAngle;
  */
 class Pacman extends FlxSprite
 {
+	private var mapa:Array<Array<Int>>;
+	
 	private var upCommand:Bool = false;
 	private var downCommand:Bool = false;
 	private var leftCommand:Bool = false;
 	private var rightCommand:Bool = false;
 	
-	public function new(X:Float=0, Y:Float=0) 
+	public function new(mapa:Array<Array<Int>>, X:Float=0, Y:Float=0) 
 	{
 		super(X, Y);
 		
 		maxVelocity.x = 200;
+		this.mapa = mapa;
 		
 		loadGraphic(AssetPaths.pacmanO__png, true, 50, 50);
 		
@@ -91,7 +94,7 @@ class Pacman extends FlxSprite
 			var nowy:Int = Std.int(this.getMidpoint().y / 50);
 			
 			if (upCommand) {
-				if (cast(FlxG.state, PlayState)._mWalls.getData()[((nowy - 1) * cast(FlxG.state, PlayState)._mWalls.widthInTiles) + nowx] == 0) {
+				if (mapa[nowy - 1][nowx] == 0) {
 					upCommand = false;
 					this.velocity.x = 0;
 					this.velocity.y = -maxVelocity.x;
@@ -99,7 +102,7 @@ class Pacman extends FlxSprite
 					angle = 90;
 				}
 			} else if (downCommand) {
-				if (cast(FlxG.state, PlayState)._mWalls.getData()[((nowy + 1) * cast(FlxG.state, PlayState)._mWalls.widthInTiles) + nowx] == 0) {
+				if (mapa[nowy + 1][nowx] == 0) {
 					downCommand = false;
 					this.velocity.x = 0;
 					this.velocity.y = maxVelocity.x;
@@ -107,7 +110,7 @@ class Pacman extends FlxSprite
 					angle = -90;
 				}
 			} else if (rightCommand) {
-				if (cast(FlxG.state, PlayState)._mWalls.getData()[(nowy * cast(FlxG.state, PlayState)._mWalls.widthInTiles) + (nowx + 1)] == 0) {
+				if (mapa[nowy][nowx + 1] == 0) {
 					rightCommand = false;
 					this.velocity.x = maxVelocity.x;
 					this.velocity.y = 0;
@@ -115,7 +118,7 @@ class Pacman extends FlxSprite
 					angle = 0;
 				}	
 			} else {
-				if (cast(FlxG.state, PlayState)._mWalls.getData()[(nowy * cast(FlxG.state, PlayState)._mWalls.widthInTiles) + (nowx - 1)] == 0) {
+				if (mapa[nowy][nowx - 1] == 0) {
 					leftCommand = false;
 					this.velocity.x = -maxVelocity.x;
 					this.velocity.y = 0;

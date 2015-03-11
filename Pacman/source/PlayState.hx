@@ -62,10 +62,6 @@ class PlayState extends FlxState
 			}
 		}
 		
-		pacman = new Pacman();
-		_map.loadEntities(placeEntities, "entidades");
-		add(pacman);
-		
 		//Crea matriz bidimensional con los datos de las paredes
 		var fila:Array<Int>;
 		var valorParedes:Array<Array<Int>> = new Array<Array<Int>>();
@@ -78,6 +74,10 @@ class PlayState extends FlxState
 			valorParedes[f] = fila;
 		}
 		
+		pacman = new Pacman(valorParedes);
+		_map.loadEntities(placeEntities, "entidades");
+		add(pacman);
+
 		gFantasmas = new GestorFantasmas(valorParedes, pacman, 4);
 		add(gFantasmas);
 		gFantasmas.nuevoFantasma(50, 50, Modulo.TipoIA.Blinky);

@@ -82,6 +82,7 @@ class PlayState extends FlxState
 		add(gFantasmas);
 		gFantasmas.nuevoFantasma(50, 50, Modulo.TipoIA.Blinky);
 		gFantasmas.nuevoFantasma(100, 50, Modulo.TipoIA.Pinky);
+		gFantasmas.nuevoFantasma(150, 50, Modulo.TipoIA.Inky);
 		
 		FlxG.camera.setBounds(0, -50, 1050, 1200, true);
 		

@@ -18,6 +18,8 @@ import flixel.FlxObject;
 import Modulo.TipoIA;
 import Pathfinding;
 
+using flixel.util.FlxSpriteUtil;
+
 /**
  * A FlxState which can be used for the actual gameplay.
  */
@@ -33,6 +35,9 @@ class PlayState extends FlxState
 	
 	private var scoreTxt:FlxText;
 	private var score:Int = 0;
+	
+	private var grafico:FlxSprite;
+	private var valorParedes:Array<Array<Int>>;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -64,7 +69,7 @@ class PlayState extends FlxState
 		
 		//Crea matriz bidimensional con los datos de las paredes
 		var fila:Array<Int>;
-		var valorParedes:Array<Array<Int>> = new Array<Array<Int>>();
+		valorParedes = new Array<Array<Int>>();
 		var unidimensional:Array<Int> = _mWalls.getData();
 		for (f in 0..._mWalls.heightInTiles) {
 			fila = new Array<Int>();
@@ -97,7 +102,11 @@ class PlayState extends FlxState
 		add(scoreTxt);
 		
 		var inicio:FlxPoint = new FlxPoint(1,1);
-		var final:FlxPoint = new FlxPoint(19,20);
+		var final:FlxPoint = new FlxPoint(19, 20);
+		
+		grafico = new FlxSprite();
+		add(grafico);
+		dibujar(2, 3);
 	}
 	
 	/**
@@ -139,5 +148,11 @@ class PlayState extends FlxState
 	private function actualizarPuntos(suma:Int):Void {
 		score += suma;
 		scoreTxt.text = Std.string(score);
+	}
+	
+	public function dibujar(xObjetivo:Int, yObjetivo:Int) {
+		grafico.makeGraphic(valorParedes.length * 50, valorParedes[0].length * 50,
+		FlxColor.TRANSPARENT, true);
+		grafico.drawRect(xObjetivo * 50, yObjetivo * 50, 50, 50, Std.parseInt("0xff31ffff"));
 	}
 }

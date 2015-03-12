@@ -31,7 +31,6 @@ class Fantasma extends FlxSpriteGroup
 		
 		var colorF:String = ia.getColor();
 		if (colorF != null && colorF.toLowerCase() != "0xffff0000") {
-			trace(base.pixels.getPixel32(23,23));
 			base.replaceColor(Std.parseInt("0xffff0000"), Std.parseInt(colorF), true);
 		}
 		

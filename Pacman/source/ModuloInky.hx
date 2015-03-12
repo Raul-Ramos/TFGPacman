@@ -2,6 +2,7 @@ package ;
 
 import flixel.FlxObject;
 import Pathfinding;
+import flixel.FlxG;
 
 /**
  * ...
@@ -69,6 +70,7 @@ class ModuloInky extends Modulo
 					xObjetivo = mapa[0].length - 1;
 				}
 		}
+		cast(FlxG.state, PlayState).dibujar(xObjetivo, yObjetivo);
 		
 		return Pathfinding.metodoTradicional(mapa, xthis, ythis, xObjetivo, yObjetivo, facing);
 	}

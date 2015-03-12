@@ -19,9 +19,7 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 		this.mapa = mapa;
 		this.pacman = pacman;
 		
-		/*add(fantasma);
-		fantasma = new Fantasma(250,200, TipoIA.Blinky, "0xffff9cce");
-		add(fantasma);
+		/*
 		fantasma = new Fantasma(300,200, TipoIA.Blinky,"0xff31ffff");
 		add(fantasma);
 		fantasma = new Fantasma(350,200, TipoIA.Blinky, "0xffffce31");
@@ -34,7 +32,8 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 		var modulo:Modulo;
 		
 		switch(tipo) {
-			case TipoIA.Blinky: modulo = new ModuloBlinky(mapa,pacman);
+			case TipoIA.Blinky: modulo = new ModuloBlinky(mapa, pacman);
+			case TipoIA.Pinky: modulo = new ModuloPinky(mapa, pacman);
 		}
 		
 		fantasma = new Fantasma(xf, yf, modulo);

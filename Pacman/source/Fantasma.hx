@@ -18,7 +18,7 @@ class Fantasma extends FlxSpriteGroup
 	private var ia:Modulo;
 	private var pasoDecidido:Bool = false;
 
-	public function new(X:Float = 0, Y:Float = 0, moduloIa:Modulo.Modulo, colorF:String = null) 
+	public function new(X:Float = 0, Y:Float = 0, moduloIa:Modulo.Modulo) 
 	{
 		super(X, Y);
 		
@@ -28,6 +28,8 @@ class Fantasma extends FlxSpriteGroup
 		base = new FlxSprite();
 		ojos = new FlxSprite();
 		base.loadGraphic(AssetPaths.fantasma__png, true, 50, 50, true);
+		
+		var colorF:String = ia.getColor();
 		if (colorF != null && colorF.toLowerCase() != "0xffff0000") {
 			trace(base.pixels.getPixel32(23,23));
 			base.replaceColor(Std.parseInt("0xffff0000"), Std.parseInt(colorF), true);

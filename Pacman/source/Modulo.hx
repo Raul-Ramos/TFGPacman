@@ -98,4 +98,5 @@ class Modulo
 
 enum TipoIA {
 	Blinky;
+	Pinky;
 }

@@ -156,8 +156,8 @@ class Pathfinding
 					continue;
 				}
 				
-				//distancia euclidiana
-				eucli = Math.sqrt(((finalX - x) * (finalX - x)) + ((finalY - y) * (finalY - y)));
+				//distancia manhattan
+				eucli = Math.abs(finalX - x) + Math.abs(finalY - y);
 				
 				//Quizá nunca hay substitucion
 				nodoA = null;

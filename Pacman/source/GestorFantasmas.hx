@@ -33,6 +33,7 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 		switch(tipo) {
 			case TipoIA.Blinky: modulo = new ModuloBlinky(mapa, pacman);
 			case TipoIA.Pinky: modulo = new ModuloPinky(mapa, pacman);
+			case TipoIA.Clyde: modulo = new ModuloClyde(mapa, pacman);
 			case TipoIA.Inky:
 				if (blinkyPerseguible != null) {
 					modulo = new ModuloInky(mapa, pacman, blinkyPerseguible);

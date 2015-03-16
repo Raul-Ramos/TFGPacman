@@ -1,13 +1,12 @@
 package ;
 
 import flixel.FlxObject;
-import Pathfinding;
 
 /**
  * ...
  * @author Goldy
  */
-class ModuloBlinky extends Modulo
+class ModuloClyde extends Modulo
 {
 	private var pacman:Pacman;
 	
@@ -16,19 +15,26 @@ class ModuloBlinky extends Modulo
 		this.pacman = pacman;
 	}
 	
-	//TODO: MODO BERSERK
+	override public function getColor():String
+	{
+		return "0xffffce31";
+	}
 	
 	override private function decidirCamino(facing:Int):Int {
-		
-		//TODO: Evitarse el 50
-		//TODO: Lo mismo si pacman tiene funcion que devuelva
-		//posición en la tabla sale mas a cuenta
 		var xObjetivo:Int = Math.floor(pacman.getMidpoint().x / 50);
 		var yObjetivo:Int = Math.floor(pacman.getMidpoint().y / 50);
 		
 		var xthis:Int = Math.floor(fantasma.getMidpoint().x / 50);
 		var ythis:Int = Math.floor(fantasma.getMidpoint().y / 50);
 		
+		//Pasivo
+		if(Math.sqrt(((xObjetivo - xthis) * (xObjetivo - xthis))
+		+ ((yObjetivo - ythis) * (yObjetivo - ythis))) <= 4 ) {
+			yObjetivo = mapa.length - 1;
+			xObjetivo = 0;
+		}
+		
 		return Pathfinding.metodoTradicional(mapa, xthis, ythis, xObjetivo, yObjetivo, facing);
 	}
+	
 }

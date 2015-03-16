@@ -100,4 +100,5 @@ enum TipoIA {
 	Blinky;
 	Pinky;
 	Inky;
+	Clyde;
 }

@@ -87,6 +87,12 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 				for (i in members) {
 					i.acabarFrightMode();
 				}
+			} else {
+				if (restanteFright < FlxG.drawFramerate * 2 && restanteFright % 10 == 0) {
+					for (i in members) {
+						i.alternarBW();
+					}
+				}
 			}
 		}
 	}

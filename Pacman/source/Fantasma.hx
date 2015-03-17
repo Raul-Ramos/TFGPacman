@@ -17,6 +17,8 @@ class Fantasma extends FlxSpriteGroup
 	
 	private var ia:Modulo;
 	private var pasoDecidido:Bool = false;
+	
+	private var frightBlue:Bool;
 
 	public function new(X:Float = 0, Y:Float = 0, moduloIa:Modulo.Modulo) 
 	{
@@ -39,6 +41,13 @@ class Fantasma extends FlxSpriteGroup
 		add(base);
 		add(ojos);
 		
+		base.animation.add("andar", [0, 1], 15, true);
+		base.animation.add("andarUP", [2, 3], 15, true);
+		base.animation.add("panicoB", [4, 5], 15, true);
+		base.animation.add("panicoW", [6, 7], 15, true);
+		
+		
+		
 		maxVelocity.x = maxVelocity.y = 150;
 		velocity.x = maxVelocity.x;
 		facing = FlxObject.RIGHT;
@@ -55,19 +64,25 @@ class Fantasma extends FlxSpriteGroup
 				//Decide el paso
 				facing = ia.movimientoRegular();
 				
+				decidirAnimacion();
+				
 				switch(facing) {
 					case FlxObject.UP:
 						velocity.x = 0;
 						velocity.y = -maxVelocity.y;
+						ojos.animation.frameIndex = 3;
 					case FlxObject.RIGHT:
 						velocity.x = maxVelocity.x;
 						velocity.y = 0;
+						ojos.animation.frameIndex = 0;
 					case FlxObject.DOWN:
 						velocity.x = 0;
 						velocity.y = maxVelocity.y;
+						ojos.animation.frameIndex = 1;
 					case FlxObject.LEFT:
 						velocity.x = -maxVelocity.x;
 						velocity.y = 0;
+						ojos.animation.frameIndex = 2;
 					default:
 						velocity.x = velocity.y = 0;
 				}
@@ -81,14 +96,45 @@ class Fantasma extends FlxSpriteGroup
 		}
 	}
 	
+	private function decidirAnimacion():Void
+	{
+		if (ia.isFrightened()) {
+			//TODO: OPT - Quizá variable local de Frightened?
+			//TOOO: OPT - Quizá contador local BW?
+			if (frightBlue) { base.animation.play("panicoB"); }
+			else { base.animation.play("panicoW"); }
+		}else {
+			if (facing == FlxObject.UP) {
+				base.animation.play("andarUP");
+			} else {
+				base.animation.play("andar");
+			}
+		}
+	}
+	
 	public function iniciarFrightMode():Void
 	{
 		ia.setFrightened(true);
+		ojos.alpha = 0;
+		frightBlue = true;
+		decidirAnimacion();
 	}
 	
 	public function acabarFrightMode():Void
 	{
 		ia.setFrightened(false);
+		ojos.alpha = 1;
+		decidirAnimacion();
+	}
+	
+	public function alternarBW():Void
+	{
+		if (frightBlue) {
+			frightBlue = false;
+		} else {
+			frightBlue = true;
+		}
+		decidirAnimacion();
 	}
 	
 	public function getIA():Modulo

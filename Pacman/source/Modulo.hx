@@ -104,6 +104,11 @@ class Modulo
 		frightened = asustado;
 	}
 	
+	public function isFrightened():Bool
+	{
+		return frightened;
+	}
+	
 	private function movimientoPanico():Int
 	{	
 		//TODO: FY, FX y facing se recalculan

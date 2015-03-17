@@ -2,6 +2,9 @@ package ;
 
 import flixel.group.FlxTypedSpriteGroup;
 import Modulo.TipoIA;
+import flixel.util.FlxPoint;
+
+import flixel.FlxG;
 
 /**
  * ...
@@ -12,6 +15,7 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 	private var mapa:Array<Array<Int>>;
 	private var pacman:Pacman;
 	private var blinkyPerseguible:Fantasma = null;
+	private var restanteFright:Int = 0;
 	
 	public function new(mapa:Array<Array<Int>>, pacman:Pacman, MaxSize:Int=4) 
 	{
@@ -45,6 +49,18 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 		
 		if (modulo != null) {
 			fantasma = new Fantasma(xf, yf, modulo);
+			
+			var vEsquina:Int = length % 4;
+			var pointEsquina:FlxPoint = new FlxPoint();
+			
+			switch(vEsquina) {
+				case 0: pointEsquina.set(mapa[0].length - 1, 0);
+				case 1: pointEsquina.set(0, 0);
+				case 2: pointEsquina.set(mapa[0].length - 1, mapa.length - 1);
+				case 3: pointEsquina.set(0, mapa.length - 1);
+			}
+			fantasma.getIA().setEsquina(pointEsquina);
+			
 			add(fantasma);
 			
 			if (tipo == TipoIA.Blinky) {
@@ -53,4 +69,25 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 		}
 	}
 	
+	public function iniciarFright() {
+		restanteFright = FlxG.updateFramerate * 6;
+		
+		for (i in members) {
+			i.iniciarFrightMode();
+		}
+	}
+	
+	override public function update():Void
+	{
+		super.update();
+		
+		if (restanteFright > 0) {
+			restanteFright--;
+			if (restanteFright == 0) {
+				for (i in members) {
+					i.acabarFrightMode();
+				}
+			}
+		}
+	}
 }

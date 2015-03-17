@@ -124,8 +124,6 @@ class PlayState extends FlxState
 	{
 		super.update();
 		
-		trace(dots.length);
-		
 		FlxG.collide(pacman, _mWalls);
 		FlxG.overlap(pacman, dots, comerPunto);
 		FlxG.overlap(pacman, powerPellets, comerPowerPellet);
@@ -153,7 +151,7 @@ class PlayState extends FlxState
 	private function comerPowerPellet(pacman:Pacman, pp:PowerPellet):Void {
 		pp.kill();
 		actualizarPuntos(50);
-		trace("yuuu");
+		gFantasmas.iniciarFright();
 	}
 	
 	private function actualizarPuntos(suma:Int):Void {

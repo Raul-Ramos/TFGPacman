@@ -1,5 +1,6 @@
 package ;
 import flixel.FlxObject;
+import flixel.util.FlxPoint;
 
 /**
  * ...
@@ -10,6 +11,8 @@ class Modulo
 	private var fantasma:Fantasma = null;
 	private var mapa:Array<Array<Int>>;
 	private var color:String = null;
+	private var esquina:FlxPoint = new FlxPoint(0, 0);
+	private var frightened:Bool = false;
 	
 	public function new(mapa:Array<Array<Int>>) 
 	{
@@ -19,6 +22,11 @@ class Modulo
 	public function setFantasma(fantasma:Fantasma):Void 
 	{
 		this.fantasma = fantasma;
+	}
+	
+	public function setEsquina(esquina:FlxPoint):Void
+	{
+		this.esquina = esquina;
 	}
 	
 	public function getColor():String 
@@ -74,8 +82,12 @@ class Modulo
 				} else {
 					return FlxObject.RIGHT;
 				}
-			} else if (caminosLibres != 0){
-				return decidirCamino(facing);
+			} else if (caminosLibres != 0) {
+				if (frightened) {
+					return movimientoPanico();
+				} else {
+					return decidirCamino(facing);
+				}
 			}
 		}
 		
@@ -87,12 +99,25 @@ class Modulo
 		return FlxObject.NONE;
 	}
 	
-	//TODO: ¿movimientoRegular lo decide todo?
-	public function movimientoPanico():Void 
-	{
-		if (fantasma == null) {
-			//TODO: return null
-		}
+	public function setFrightened(asustado:Bool):Void
+	{ 
+		frightened = asustado;
+	}
+	
+	private function movimientoPanico():Int
+	{	
+		//TODO: FY, FX y facing se recalculan
+		var fy:Int = Math.floor(fantasma.getMidpoint().y/50); 
+		var fx:Int = Math.floor(fantasma.getMidpoint().x / 50);
+		var facing:Int = fantasma.facing;
+		var disponibles:Array<Int> = new Array<Int>();
+		
+		if (facing != FlxObject.UP && mapa[fy + 1][fx] == 0) { disponibles.push(FlxObject.DOWN); }
+		if (facing != FlxObject.DOWN && mapa[fy - 1][fx] == 0) { disponibles.push(FlxObject.UP); }
+		if (facing != FlxObject.LEFT && mapa[fy][fx + 1] == 0) { disponibles.push(FlxObject.RIGHT); }
+		if (facing != FlxObject.RIGHT && mapa[fy][fx - 1] == 0) { disponibles.push(FlxObject.LEFT); }
+		
+		return disponibles[Std.random(disponibles.length)];
 	}
 }
 

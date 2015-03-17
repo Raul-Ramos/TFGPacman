@@ -54,7 +54,7 @@ class Fantasma extends FlxSpriteGroup
 				
 				//Decide el paso
 				facing = ia.movimientoRegular();
-					
+				
 				switch(facing) {
 					case FlxObject.UP:
 						velocity.x = 0;
@@ -79,5 +79,20 @@ class Fantasma extends FlxSpriteGroup
 			//Permite decidir el paso
 			pasoDecidido = false;
 		}
+	}
+	
+	public function iniciarFrightMode():Void
+	{
+		ia.setFrightened(true);
+	}
+	
+	public function acabarFrightMode():Void
+	{
+		ia.setFrightened(false);
+	}
+	
+	public function getIA():Modulo
+	{
+		return ia;
 	}
 }

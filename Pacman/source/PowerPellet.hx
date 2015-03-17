@@ -18,7 +18,6 @@ class PowerPellet extends FlxSprite
 		
 		makeGraphic(20, 20, FlxColor.TRANSPARENT, true);
 		drawCircle(20 / 2, 20 / 2, 20 / 2, 0xffFFB897);
-		trace(this.width);
 	}
 	
 }

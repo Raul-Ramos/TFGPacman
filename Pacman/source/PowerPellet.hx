@@ -9,15 +9,16 @@ using flixel.util.FlxSpriteUtil;
  * ...
  * @author Goldy
  */
-class Dot extends FlxSprite
+class PowerPellet extends FlxSprite
 {
 
 	public function new(X:Float=0, Y:Float=0) 
 	{
 		super(X, Y);
 		
-		makeGraphic(9, 9, FlxColor.TRANSPARENT, true);
-		drawRect(0, 0, 9, 9, 0xffFFB897);
+		makeGraphic(20, 20, FlxColor.TRANSPARENT, true);
+		drawCircle(20 / 2, 20 / 2, 20 / 2, 0xffFFB897);
+		trace(this.width);
 	}
 	
 }

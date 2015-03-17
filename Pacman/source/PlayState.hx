@@ -28,6 +28,7 @@ class PlayState extends FlxState
 	
 	private var pacman:Pacman;
 	private var dots:FlxTypedGroup<Dot>;
+	private var powerPellets:FlxTypedGroup<PowerPellet>;
 	private var gFantasmas:GestorFantasmas;
 	
 	
@@ -41,6 +42,7 @@ class PlayState extends FlxState
 	{
 		super.create();
 		
+		//Lectura del mapa
 		_map = new CustomOgmoLoader(AssetPaths.n1__oel);
 		
 		_mWalls = _map.loadTilemap(AssetPaths.tileset__png, 50, 50, "paredes");
@@ -49,6 +51,7 @@ class PlayState extends FlxState
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
 		
+		//Creación de zonas
 		dots = new FlxTypedGroup<Dot>();
 		var zonas:Array<Int> = _map.getIntArrayValues("zonas");
 		var x,y:Float;
@@ -74,10 +77,16 @@ class PlayState extends FlxState
 			valorParedes[f] = fila;
 		}
 		
+		//Lectura de entidades
 		pacman = new Pacman(valorParedes);
+		powerPellets = new FlxTypedGroup<PowerPellet>();
+		
 		_map.loadEntities(placeEntities, "entidades");
+		
 		add(pacman);
+		add(powerPellets);
 
+		//Gestor de fantasmas
 		gFantasmas = new GestorFantasmas(valorParedes, pacman, 4);
 		add(gFantasmas);
 		gFantasmas.nuevoFantasma(50, 50, Modulo.TipoIA.Blinky);
@@ -85,6 +94,7 @@ class PlayState extends FlxState
 		gFantasmas.nuevoFantasma(150, 50, Modulo.TipoIA.Inky);
 		gFantasmas.nuevoFantasma(200, 50, Modulo.TipoIA.Clyde);
 		
+		//Interfaz
 		FlxG.camera.setBounds(0, -50, 1050, 1200, true);
 		
 		var myText = new FlxText((FlxG.width/2) - 50, -40, FlxG.width/2); // x, y, width
@@ -96,9 +106,6 @@ class PlayState extends FlxState
 		scoreTxt.text = Std.string(score);
 		scoreTxt.setFormat(20, FlxColor.WHITE, "right");
 		add(scoreTxt);
-		
-		var inicio:FlxPoint = new FlxPoint(1,1);
-		var final:FlxPoint = new FlxPoint(19,20);
 	}
 	
 	/**
@@ -117,8 +124,11 @@ class PlayState extends FlxState
 	{
 		super.update();
 		
+		trace(dots.length);
+		
 		FlxG.collide(pacman, _mWalls);
 		FlxG.overlap(pacman, dots, comerPunto);
+		FlxG.overlap(pacman, powerPellets, comerPowerPellet);
 	}
 	
 	private function placeEntities(entityName:String, entityData:Xml):Void
@@ -129,12 +139,21 @@ class PlayState extends FlxState
 		{
 			pacman.x = x;
 			pacman.y = y;
+			
+		} else if (entityName == "puntoGrande") {
+			powerPellets.add(new PowerPellet(x + ((50-20)/2), y + ((50-20)/2)));
 		}
 	}
 	
 	private function comerPunto(pacman:Pacman, dot:Dot):Void {
 		dot.kill();
 		actualizarPuntos(10);
+	}
+	
+	private function comerPowerPellet(pacman:Pacman, pp:PowerPellet):Void {
+		pp.kill();
+		actualizarPuntos(50);
+		trace("yuuu");
 	}
 	
 	private function actualizarPuntos(suma:Int):Void {

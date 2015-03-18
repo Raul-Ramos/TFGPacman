@@ -106,6 +106,8 @@ class PlayState extends FlxState
 		scoreTxt.text = Std.string(score);
 		scoreTxt.setFormat(20, FlxColor.WHITE, "right");
 		add(scoreTxt);
+		
+		gFantasmas.empezarCicloSC();
 	}
 	
 	/**
@@ -137,7 +139,6 @@ class PlayState extends FlxState
 		{
 			pacman.x = x;
 			pacman.y = y;
-			
 		} else if (entityName == "puntoGrande") {
 			powerPellets.add(new PowerPellet(x + ((50-20)/2), y + ((50-20)/2)));
 		}

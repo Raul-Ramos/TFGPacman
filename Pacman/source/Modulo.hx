@@ -12,7 +12,9 @@ class Modulo
 	private var mapa:Array<Array<Int>>;
 	private var color:String = null;
 	private var esquina:FlxPoint = new FlxPoint(0, 0);
+	
 	private var frightened:Bool = false;
+	private var scatter:Bool = false;
 	
 	public function new(mapa:Array<Array<Int>>) 
 	{
@@ -86,7 +88,11 @@ class Modulo
 				if (frightened) {
 					return movimientoPanico();
 				} else {
-					return decidirCamino(facing);
+					if (scatter) {
+						return caminoScatter(facing);
+					} else {
+						return decidirCamino(facing);
+					}
 				}
 			}
 		}
@@ -97,6 +103,19 @@ class Modulo
 	
 	private function decidirCamino(facing:Int):Int {
 		return FlxObject.NONE;
+	}
+	
+	private function caminoScatter(facing:Int) {
+		return FlxObject.NONE;
+	}
+	
+	public function alternarSC():Void
+	{
+		if (scatter) {
+			scatter = false;
+		} else {
+			scatter = true;
+		}
 	}
 	
 	public function setFrightened(asustado:Bool):Void

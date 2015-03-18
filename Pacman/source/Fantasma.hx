@@ -57,6 +57,7 @@ class Fantasma extends FlxSpriteGroup
 	{
 		super.update();
 		
+		//TODO: Qué feo es esto
 		if(getMidpoint().x % 50 >= 23 && getMidpoint().x % 50 <= 27
 		&& getMidpoint().y % 50 >= 23 && getMidpoint().y % 50 <= 27) {
 			if (!pasoDecidido) {

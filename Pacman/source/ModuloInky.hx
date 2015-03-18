@@ -72,4 +72,14 @@ class ModuloInky extends Modulo
 		
 		return Pathfinding.metodoTradicional(mapa, xthis, ythis, xObjetivo, yObjetivo, facing);
 	}
+	
+	override private function caminoScatter(facing:Int):Int{
+		var xObjetivo:Int = Std.int(esquina.x);
+		var yObjetivo:Int = Std.int(esquina.y);
+		
+		var xthis:Int = Math.floor(fantasma.getMidpoint().x / 50);
+		var ythis:Int = Math.floor(fantasma.getMidpoint().y / 50);
+		
+		return Pathfinding.metodoTradicional(mapa, xthis, ythis, xObjetivo, yObjetivo, facing);
+	}
 }

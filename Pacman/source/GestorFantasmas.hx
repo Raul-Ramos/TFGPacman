@@ -17,16 +17,27 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 	private var blinkyPerseguible:Fantasma = null;
 	private var restanteFright:Int = 0;
 	
+	//Variables del ciclo scatter-chase
+	private var duracionCiclos:Array<Int> = [7, 20, 7, 20, 5, 20, 5];
+	private var fase:Int = -1;
+	private var restanteFase:Int;
+	
+	
 	public function new(mapa:Array<Array<Int>>, pacman:Pacman, MaxSize:Int=4) 
 	{
 		super(0, 0, MaxSize);
 		
 		this.mapa = mapa;
 		this.pacman = pacman;
-		
-		/*
-		fantasma = new Fantasma(350,200, TipoIA.Blinky, "0xffffce31");
-		add(fantasma);*/
+	}
+	
+	public function empezarCicloSC():Void
+	{
+		fase = 0;
+		restanteFase = duracionCiclos[fase] * FlxG.updateFramerate;
+		for (i in members) {
+			i.getIA().alternarSC();
+		}
 	}
 	
 	public function nuevoFantasma(xf:Float = 0, yf:Float = 0, tipo:TipoIA)
@@ -93,6 +104,22 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 						i.alternarBW();
 					}
 				}
+			}
+		}
+		
+		if (fase != -1) {
+			if ( restanteFase == 0 ) {
+				if (fase + 1 > duracionCiclos.length) {
+					fase = -1;
+				} else {
+					fase++;
+					restanteFase = duracionCiclos[fase] * FlxG.updateFramerate;
+					for (i in members) {
+						i.getIA().alternarSC();
+					}
+				}
+			} else {
+				restanteFase--;
 			}
 		}
 	}

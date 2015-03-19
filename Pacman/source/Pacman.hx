@@ -109,7 +109,7 @@ class Pacman extends FlxSprite
 				blocMov = true;
 				
 			} //TODO: Esta cosa tan fea está aquí porque las colisiones no funcionan bien
-			else if ( this.x < 0.5 && facing == FlxObject.LEFT ) {
+			else if ( this.x < 0 && facing == FlxObject.LEFT ) {
 				this.x = (mapa[0].length + 1) * 50;
 				this.velocity.x = -maxVelocity.x;
 				blocMov = true;

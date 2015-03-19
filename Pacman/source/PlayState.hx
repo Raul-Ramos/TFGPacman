@@ -51,20 +51,6 @@ class PlayState extends FlxState
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
 		
-		//Creación de zonas
-		dots = new FlxTypedGroup<Dot>();
-		var zonas:Array<Int> = _map.getIntArrayValues("zonas");
-		var x,y:Float;
-		for (i in 0...zonas.length) {
-			if (zonas[i] == 3) {
-				x = i % _mWalls.widthInTiles;
-				y = Math.floor(i / _mWalls.widthInTiles);
-				var punto:Dot = new Dot((x * 50) + 21, (y * 50) + 21);
-				dots.add(punto);
-				add(punto);
-			}
-		}
-		
 		//Crea matriz bidimensional con los datos de las paredes
 		var fila:Array<Int>;
 		var valorParedes:Array<Array<Int>> = new Array<Array<Int>>();
@@ -72,9 +58,34 @@ class PlayState extends FlxState
 		for (f in 0..._mWalls.heightInTiles) {
 			fila = new Array<Int>();
 			for (c in 0..._mWalls.widthInTiles) {
-				fila[c] = unidimensional[(f * _mWalls.widthInTiles) + c];
+				if (unidimensional[(f * _mWalls.widthInTiles) + c] == 0) {
+					fila[c] = 0;
+				}
+				else {
+					fila[c] = 1;
+				}
+				
 			}
 			valorParedes[f] = fila;
+		}
+		
+		//Creación de zonas
+		dots = new FlxTypedGroup<Dot>();
+		var zonas:Array<Int> = _map.getIntArrayValues("zonas");
+		var x,y:Int;
+		for (i in 0...zonas.length) {
+			if (zonas[i] == 3) {
+				x = i % valorParedes[0].length;
+				y = Math.floor(i / valorParedes[0].length);
+				var punto:Dot = new Dot((x * 50) + 21, (y * 50) + 21);
+				dots.add(punto);
+				add(punto);
+			}
+			if (zonas[i] == 4) {
+				x = i % valorParedes[0].length;
+				y = Math.floor(i / valorParedes[0].length);
+				valorParedes[y][x] = -1;
+			}
 		}
 		
 		//Lectura de entidades
@@ -139,6 +150,7 @@ class PlayState extends FlxState
 		{
 			pacman.x = x;
 			pacman.y = y;
+			
 		} else if (entityName == "puntoGrande") {
 			powerPellets.add(new PowerPellet(x + ((50-20)/2), y + ((50-20)/2)));
 		}

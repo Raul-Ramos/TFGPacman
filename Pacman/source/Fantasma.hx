@@ -19,6 +19,7 @@ class Fantasma extends FlxSpriteGroup
 	private var pasoDecidido:Bool = false;
 	
 	private var frightBlue:Bool;
+	private var currentVelocity:Float;
 
 	public function new(X:Float = 0, Y:Float = 0, moduloIa:Modulo.Modulo) 
 	{
@@ -48,8 +49,8 @@ class Fantasma extends FlxSpriteGroup
 		
 		
 		
-		maxVelocity.x = maxVelocity.y = 150;
-		velocity.x = maxVelocity.x;
+		maxVelocity.x = maxVelocity.y = currentVelocity = 150;
+		velocity.x = currentVelocity;
 		facing = FlxObject.RIGHT;
 	}
 	
@@ -75,6 +76,14 @@ class Fantasma extends FlxSpriteGroup
 				
 			} else if (!pasoDecidido) {
 				
+				if (ia.getMapa()[Math.floor(midY / 50)][Math.floor(midX / 50)] == -1) {
+					if (currentVelocity == maxVelocity.x) {
+						currentVelocity *= 0.4;
+					}
+				} else if (currentVelocity != maxVelocity.x) {
+					currentVelocity = maxVelocity.x;
+				}
+				
 				//Decide el paso
 				facing = ia.movimientoRegular();
 				
@@ -83,18 +92,18 @@ class Fantasma extends FlxSpriteGroup
 				switch(facing) {
 					case FlxObject.UP:
 						velocity.x = 0;
-						velocity.y = -maxVelocity.y;
+						velocity.y = -currentVelocity;
 						ojos.animation.frameIndex = 3;
 					case FlxObject.RIGHT:
-						velocity.x = maxVelocity.x;
+						velocity.x = currentVelocity;
 						velocity.y = 0;
 						ojos.animation.frameIndex = 0;
 					case FlxObject.DOWN:
 						velocity.x = 0;
-						velocity.y = maxVelocity.y;
+						velocity.y = currentVelocity;
 						ojos.animation.frameIndex = 1;
 					case FlxObject.LEFT:
-						velocity.x = -maxVelocity.x;
+						velocity.x = -currentVelocity;
 						velocity.y = 0;
 						ojos.animation.frameIndex = 2;
 					default:

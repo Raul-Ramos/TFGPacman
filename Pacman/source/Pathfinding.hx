@@ -22,7 +22,7 @@ class Pathfinding
 		//Así se procesa en el modelo original, no cambiar.
 		
 		//Arriba
-		if (facing != FlxObject.DOWN && mapa[posY][posX] == 0) {
+		if (facing != FlxObject.DOWN && mapa[posY][posX] < 1) {
 			mejorOpcion = FlxObject.UP;
 			mejorDistancia = Math.sqrt(((desX - posX) * (desX - posX)) + 
 			((desY - posY) * (desY - posY)));
@@ -31,7 +31,7 @@ class Pathfinding
 		//Izquierda
 		posX -= 1;
 		posY += 1;
-		if (facing != FlxObject.RIGHT && mapa[posY][posX] == 0) {
+		if (facing != FlxObject.RIGHT && mapa[posY][posX] < 1) {
 			distancia = Math.sqrt(((desX - posX) * (desX - posX)) + 
 			((desY - posY) * (desY - posY)));
 			
@@ -45,7 +45,7 @@ class Pathfinding
 		//Abajo
 		posX += 1;
 		posY += 1;
-		if (facing != FlxObject.UP && mapa[posY][posX] == 0) {
+		if (facing != FlxObject.UP && mapa[posY][posX] < 1) {
 			distancia = Math.sqrt(((desX - posX) * (desX - posX)) + 
 			((desY - posY) * (desY - posY)));
 			
@@ -59,7 +59,7 @@ class Pathfinding
 		//Derecha
 		posX += 1;
 		posY -= 1;
-		if (facing != FlxObject.LEFT && mapa[posY][posX] == 0) {
+		if (facing != FlxObject.LEFT && mapa[posY][posX] < 1) {
 			distancia = Math.sqrt(((desX - posX) * (desX - posX)) + 
 			((desY - posY) * (desY - posY)));
 			
@@ -134,7 +134,7 @@ class Pathfinding
 				}
 				
 				//Revisa que no sea pared
-				if (mapa[y][x] != 0) {
+				if (mapa[y][x] == 1) {
 					//Especial de Pacman
 					//Si la pared es el objetivo, esta es la solución
 					if (x == finalX && y == finalY) {
@@ -159,7 +159,7 @@ class Pathfinding
 				//distancia manhattan
 				eucli = Math.abs(finalX - x) + Math.abs(finalY - y);
 				
-				//Quizá nunca hay substitucion
+				//TODO: Quizá nunca hay substitucion
 				nodoA = null;
 				for (i in abiertos) {
 					if (i.x == x && i.y == y) {

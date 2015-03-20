@@ -57,10 +57,23 @@ class Fantasma extends FlxSpriteGroup
 	{
 		super.update();
 		
-		//TODO: Qué feo es esto
-		if(getMidpoint().x % 50 >= 23 && getMidpoint().x % 50 <= 27
-		&& getMidpoint().y % 50 >= 23 && getMidpoint().y % 50 <= 27) {
-			if (!pasoDecidido) {
+		var midX:Int = Std.int(Math.abs(getMidpoint().x));
+		var midY:Int = Std.int(Math.abs(getMidpoint().y));
+		
+		if(midX % 50 >= 23 && midX % 50 <= 27
+		&& midY % 50 >= 23 && midY % 50 <= 27) {
+			
+			//Comportamiento fuera de los bordes
+			if (midX >= (ia.getMapa()[0].length) * 50) {
+				if (facing == FlxObject.RIGHT) {
+					x = -50;
+				}
+			} else if (x < -23) {
+				if (facing == FlxObject.LEFT) {
+					x = ia.getMapa()[0].length * 50;
+				}
+				
+			} else if (!pasoDecidido) {
 				
 				//Decide el paso
 				facing = ia.movimientoRegular();

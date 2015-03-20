@@ -101,8 +101,6 @@ class Pacman extends FlxSprite
 				blocMov = false;
 			}
 			
-			//trace(this.x + ", " + facing + ", " + FlxObject.LEFT );
-			
 			//Si se está haciendo un warp, se desplaza a Pacman y se bloquea el movimiento
 			if ( this.x > mapa[0].length * 50 && facing == FlxObject.RIGHT ) {
 				this.x = -50;

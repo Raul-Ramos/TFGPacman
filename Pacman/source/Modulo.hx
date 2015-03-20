@@ -36,6 +36,11 @@ class Modulo
 		return null;
 	}
 	
+	public function getMapa():Array<Array<Int>>
+	{
+		return mapa;
+	}
+	
 	public function movimientoRegular():Int
 	{
 		if (fantasma == null) {
@@ -52,13 +57,13 @@ class Modulo
 		var right:Bool;
 		var caminosLibres:Int = 0;
 		
-		if (mapa[fy][fx + 1] == 0){ caminosLibres++; right = true;}
+		if (mapa[fy][fx + 1] < 1){ caminosLibres++; right = true;}
 		else { right = false;}
-		if (mapa[fy][fx - 1] == 0){ caminosLibres++; left = true;}
+		if (mapa[fy][fx - 1] < 1){ caminosLibres++; left = true;}
 		else { left = false;}
-		if (mapa[fy + 1][fx] == 0) { caminosLibres++; down = true; }
+		if (mapa[fy + 1][fx] < 1) { caminosLibres++; down = true; }
 		else { down = false;}
-		if (mapa[fy - 1][fx] == 0) { caminosLibres++; up = true; }
+		if (mapa[fy - 1][fx] < 1 ) { caminosLibres++; up = true; }
 		else { up = false; }
 		
 		if (caminosLibres == 1) {

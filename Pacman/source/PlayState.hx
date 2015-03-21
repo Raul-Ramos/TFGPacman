@@ -74,17 +74,24 @@ class PlayState extends FlxState
 		var zonas:Array<Int> = _map.getIntArrayValues("zonas");
 		var x,y:Int;
 		for (i in 0...zonas.length) {
-			if (zonas[i] == 3) {
-				x = i % valorParedes[0].length;
-				y = Math.floor(i / valorParedes[0].length);
-				var punto:Dot = new Dot((x * 50) + 21, (y * 50) + 21);
-				dots.add(punto);
-				add(punto);
-			}
-			if (zonas[i] == 4) {
-				x = i % valorParedes[0].length;
-				y = Math.floor(i / valorParedes[0].length);
-				valorParedes[y][x] = -1;
+			switch(zonas[i]) {
+				//Zonas de casa
+				case 2:
+					x = i % valorParedes[0].length;
+					y = Math.floor(i / valorParedes[0].length);
+					valorParedes[y][x] = 2;
+				//Zonas de puntos
+				case 3:
+					x = i % valorParedes[0].length;
+					y = Math.floor(i / valorParedes[0].length);
+					var punto:Dot = new Dot((x * 50) + 21, (y * 50) + 21);
+					dots.add(punto);
+					add(punto);
+				//Zonas lentas (warp)
+				case 4:
+					x = i % valorParedes[0].length;
+					y = Math.floor(i / valorParedes[0].length);
+					valorParedes[y][x] = -1;
 			}
 		}
 		
@@ -100,10 +107,10 @@ class PlayState extends FlxState
 		//Gestor de fantasmas
 		gFantasmas = new GestorFantasmas(valorParedes, pacman, 4);
 		add(gFantasmas);
-		gFantasmas.nuevoFantasma(50, 50, Modulo.TipoIA.Blinky);
-		gFantasmas.nuevoFantasma(100, 50, Modulo.TipoIA.Pinky);
-		gFantasmas.nuevoFantasma(150, 50, Modulo.TipoIA.Inky);
-		gFantasmas.nuevoFantasma(200, 50, Modulo.TipoIA.Clyde);
+		gFantasmas.nuevoFantasma(Modulo.TipoIA.Blinky);
+		gFantasmas.nuevoFantasma(Modulo.TipoIA.Pinky);
+		gFantasmas.nuevoFantasma(Modulo.TipoIA.Inky);
+		gFantasmas.nuevoFantasma(Modulo.TipoIA.Clyde);
 		
 		//Interfaz
 		FlxG.camera.setBounds(0, -50, 1050, 1200, true);

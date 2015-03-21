@@ -12,9 +12,18 @@ import flixel.FlxG;
  */
 class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 {
+	//Variables de uso
 	private var mapa:Array<Array<Int>>;
 	private var pacman:Pacman;
 	private var blinkyPerseguible:Fantasma = null;
+	
+	//Posicionamiento y casa
+	private var espaciosDisponibles:Array<FlxPoint>;
+	private var espaciosUsados:Int = 0;
+	private var puerta:FlxPoint = null;
+	private var salida:FlxPoint = null;
+	
+	//Frightened
 	private var restanteFright:Int = 0;
 	
 	//Variables del ciclo scatter-chase
@@ -29,6 +38,39 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 		
 		this.mapa = mapa;
 		this.pacman = pacman;
+		
+		//Busca los espacios disponibles de spawn para los fantasmas
+		espaciosDisponibles = new Array<FlxPoint>();
+		for (py in 0...mapa.length) {
+			for (px in 0...mapa[py].length) {
+				if (mapa[py][px] == 2) {
+					
+					//Mira si vale como puerta si no se ha encontrado ninguna
+					if (puerta == null) {
+						if (py - 1 > 0 && mapa[py - 1][px] < 1) {
+							salida = new FlxPoint(px, py - 1);
+						} else if (py + 1 < mapa.length && mapa[py + 1][px] < 1) {
+							salida = new FlxPoint(px, py + 1);
+						} else if (px + 1 < mapa[0].length && mapa[py][px + 1] < 1) {
+							salida = new FlxPoint(px + 1, py);
+						} else if (px - 1 > 0 && mapa[py][px - 1] < 1) {
+							salida = new FlxPoint(px - 1, py);
+						}
+						
+						if (salida != null) {
+							trace(px, py, salida);
+							puerta = new FlxPoint(px, py);
+							espaciosDisponibles.insert(0, salida);
+							continue;
+						}
+						
+					}
+					
+					espaciosDisponibles.push(new FlxPoint(px,py));
+					
+				}
+			}
+		}
 	}
 	
 	public function empezarCicloSC():Void
@@ -40,9 +82,19 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 		}
 	}
 	
-	public function nuevoFantasma(xf:Float = 0, yf:Float = 0, tipo:TipoIA)
+	public function nuevoFantasma(tipo:TipoIA):Fantasma
 	{
-		var fantasma:Fantasma;
+		//Se calcula la posicion de salida
+		var posicion:FlxPoint = null;
+		if (espaciosUsados < espaciosDisponibles.length) {
+			posicion = espaciosDisponibles[espaciosUsados];
+		} else {
+			//TODO: Errores sólo en debug
+			trace("ERROR: Sin posiciones de spawn disponibles");
+			return null;
+		}
+		
+		//Se mira qué tipo de módulo es
 		var modulo:Modulo = null;
 		
 		switch(tipo) {
@@ -58,26 +110,35 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 				}
 		}
 		
-		if (modulo != null) {
-			fantasma = new Fantasma(xf, yf, modulo);
-			
-			var vEsquina:Int = length % 4;
-			var pointEsquina:FlxPoint = new FlxPoint();
-			
-			switch(vEsquina) {
-				case 0: pointEsquina.set(mapa[0].length - 1, 0);
-				case 1: pointEsquina.set(0, 0);
-				case 2: pointEsquina.set(mapa[0].length - 1, mapa.length - 1);
-				case 3: pointEsquina.set(0, mapa.length - 1);
-			}
-			fantasma.getIA().setEsquina(pointEsquina);
-			
-			add(fantasma);
-			
-			if (tipo == TipoIA.Blinky) {
-				blinkyPerseguible = fantasma;
-			}
+		if (modulo == null) {
+			return null;
 		}
+		
+		//Se crea el fantasma
+		var fantasma:Fantasma = new Fantasma(posicion.x * 50, posicion.y * 50, modulo);
+		
+		trace(fantasma.x, fantasma.y, fantasma.x / 50, fantasma.y / 50);
+		
+		//Se asigna la esquina hogar
+		var vEsquina:Int = length % 4;
+		var pointEsquina:FlxPoint = new FlxPoint();	
+		switch(vEsquina) {
+			case 0: pointEsquina.set(mapa[0].length - 1, 0);
+			case 1: pointEsquina.set(0, 0);
+			case 2: pointEsquina.set(mapa[0].length - 1, mapa.length - 1);
+			case 3: pointEsquina.set(0, mapa.length - 1);
+		}
+		modulo.setEsquina(pointEsquina);
+		
+		//Se añade el fantasma
+		add(fantasma);
+			
+		if (tipo == TipoIA.Blinky) {
+			blinkyPerseguible = fantasma;
+		}
+		
+		espaciosUsados++;
+		return fantasma;
 	}
 	
 	public function iniciarFright() {

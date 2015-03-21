@@ -3,6 +3,7 @@ package ;
 import flixel.group.FlxTypedSpriteGroup;
 import Modulo.TipoIA;
 import flixel.util.FlxPoint;
+import flixel.group.FlxTypedGroup;
 
 import flixel.FlxG;
 
@@ -20,6 +21,7 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 	//Posicionamiento y casa
 	private var espaciosDisponibles:Array<FlxPoint>;
 	private var espaciosUsados:Int = 0;
+	private var fantasmasCautivos:Array<Fantasma>;
 	private var puerta:FlxPoint = null;
 	private var salida:FlxPoint = null;
 	
@@ -31,13 +33,18 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 	private var fase:Int = -1;
 	private var restanteFase:Int;
 	
+	//Dots
+	private var dots:FlxTypedGroup<Dot>;
 	
-	public function new(mapa:Array<Array<Int>>, pacman:Pacman, MaxSize:Int=4) 
+	
+	public function new(mapa:Array<Array<Int>>, dots:FlxTypedGroup<Dot>, pacman:Pacman) 
 	{
-		super(0, 0, MaxSize);
+		super(0, 0, 4);
 		
 		this.mapa = mapa;
+		this.dots = dots;
 		this.pacman = pacman;
+		fantasmasCautivos = new Array<Fantasma>();
 		
 		//Busca los espacios disponibles de spawn para los fantasmas
 		espaciosDisponibles = new Array<FlxPoint>();
@@ -58,7 +65,6 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 						}
 						
 						if (salida != null) {
-							trace(px, py, salida);
 							puerta = new FlxPoint(px, py);
 							espaciosDisponibles.insert(0, salida);
 							continue;
@@ -117,8 +123,6 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 		//Se crea el fantasma
 		var fantasma:Fantasma = new Fantasma(posicion.x * 50, posicion.y * 50, modulo);
 		
-		trace(fantasma.x, fantasma.y, fantasma.x / 50, fantasma.y / 50);
-		
 		//Se asigna la esquina hogar
 		var vEsquina:Int = length % 4;
 		var pointEsquina:FlxPoint = new FlxPoint();	
@@ -137,6 +141,10 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 			blinkyPerseguible = fantasma;
 		}
 		
+		if (espaciosUsados != 0) {
+			fantasmasCautivos.push(fantasma);
+		}
+		
 		espaciosUsados++;
 		return fantasma;
 	}
@@ -145,13 +153,32 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 		restanteFright = FlxG.updateFramerate * 6;
 		
 		for (i in members) {
-			i.iniciarFrightMode();
+			if (fantasmasCautivos.indexOf(i) == -1) {
+				i.iniciarFrightMode();
+			}
 		}
 	}
 	
 	override public function update():Void
 	{
 		super.update();
+		
+		if (fantasmasCautivos.length > 0) {
+			if (fantasmasCautivos.length == 1) {
+				if (dots.countDead() >= Math.floor(dots.length/3)) {
+					fantasmasCautivos[0].liberar(puerta, Std.int(salida.x - puerta.x), Std.int(salida.y - puerta.y));
+					fantasmasCautivos.remove(fantasmasCautivos[0]);
+				}
+			} else if (fantasmasCautivos.length == 2) {
+				if (dots.countDead() >= 30) {
+					fantasmasCautivos[0].liberar(puerta, Std.int(salida.x - puerta.x), Std.int(salida.y - puerta.y));
+					fantasmasCautivos.remove(fantasmasCautivos[0]);
+				}
+			} else {
+				fantasmasCautivos[0].liberar(puerta, Std.int(salida.x - puerta.x), Std.int(salida.y - puerta.y));
+				fantasmasCautivos.remove(fantasmasCautivos[0]);
+			}
+		}
 		
 		if (restanteFright > 0) {
 			restanteFright--;

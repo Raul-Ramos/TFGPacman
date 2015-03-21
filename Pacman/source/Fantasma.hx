@@ -3,6 +3,7 @@ package ;
 import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.group.FlxSpriteGroup;
+import flixel.util.FlxPoint;
 
 import Modulo.TipoIA;
 
@@ -158,6 +159,17 @@ class Fantasma extends FlxSpriteGroup
 			frightBlue = true;
 		}
 		decidirAnimacion();
+	}
+	
+	//Se coloca el fantasma en la puerta. 
+	//vX y vY son -1 o 1 dependiendo de la dirección que se tenga que
+	//tomar para salir.
+	public function liberar(puerta:FlxPoint, vX:Int, vY:Int):Void
+	{
+		x = (puerta.x * 50) - (vX * 50);
+		y = (puerta.y * 50) - (vY * 50);
+		velocity.x = vX * maxVelocity.x * 0.4;
+		velocity.y = vY * maxVelocity.x * 0.4;
 	}
 	
 	public function getIA():Modulo

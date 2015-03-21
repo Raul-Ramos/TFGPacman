@@ -24,9 +24,10 @@ import Pathfinding;
 class PlayState extends FlxState
 {
 	private var _map:CustomOgmoLoader;
-	public var _mWalls:FlxTilemap; //TODO: toprivate
+	private var _mWalls:FlxTilemap;
 	
 	private var pacman:Pacman;
+	//TODO: Solo una lista
 	private var dots:FlxTypedGroup<Dot>;
 	private var powerPellets:FlxTypedGroup<PowerPellet>;
 	private var gFantasmas:GestorFantasmas;
@@ -105,7 +106,7 @@ class PlayState extends FlxState
 		add(powerPellets);
 
 		//Gestor de fantasmas
-		gFantasmas = new GestorFantasmas(valorParedes, pacman, 4);
+		gFantasmas = new GestorFantasmas(valorParedes, dots, pacman);
 		add(gFantasmas);
 		gFantasmas.nuevoFantasma(Modulo.TipoIA.Blinky);
 		gFantasmas.nuevoFantasma(Modulo.TipoIA.Pinky);

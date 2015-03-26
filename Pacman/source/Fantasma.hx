@@ -22,7 +22,7 @@ class Fantasma extends FlxSpriteGroup
 	private var frightBlue:Bool;
 	private var currentVelocity:Float;
 
-	public function new(X:Float = 0, Y:Float = 0, moduloIa:Modulo.Modulo) 
+	public function new(X:Float = 0, Y:Float = 0, velocidad:Float, moduloIa:Modulo.Modulo) 
 	{
 		super(X, Y);
 		
@@ -47,11 +47,8 @@ class Fantasma extends FlxSpriteGroup
 		base.animation.add("andarUP", [2, 3], 15, true);
 		base.animation.add("panicoB", [4, 5], 15, true);
 		base.animation.add("panicoW", [6, 7], 15, true);
-		
-		
-		
-		maxVelocity.x = maxVelocity.y = currentVelocity = 150;
-		velocity.x = currentVelocity;
+
+		maxVelocity.x = currentVelocity = velocidad;
 		facing = FlxObject.RIGHT;
 	}
 	
@@ -75,7 +72,8 @@ class Fantasma extends FlxSpriteGroup
 					x = ia.getMapa()[0].length * 50;
 				}
 				
-			} else if (!pasoDecidido) {
+			} // Si dentro de los bordes, decide paso 
+			else if (!pasoDecidido) {
 				
 				if (ia.getMapa()[Math.floor(midY / 50)][Math.floor(midX / 50)] == -1) {
 					if (currentVelocity == maxVelocity.x) {
@@ -175,5 +173,14 @@ class Fantasma extends FlxSpriteGroup
 	public function getIA():Modulo
 	{
 		return ia;
+	}
+	
+	public function getCurrentVelocity():Float {
+		return currentVelocity;
+	}
+	
+	public function setCurrentVelocity(vel:Float):Void
+	{
+		currentVelocity = vel;
 	}
 }

@@ -96,8 +96,11 @@ class PlayState extends FlxState
 			}
 		}
 		
+		//Gestor de valores
+		var gestorValores:GestorValoresJuego = new GestorValoresJuego();
+		
 		//Lectura de entidades
-		pacman = new Pacman(valorParedes);
+		pacman = new Pacman(valorParedes, gestorValores);
 		powerPellets = new FlxTypedGroup<PowerPellet>();
 		
 		_map.loadEntities(placeEntities, "entidades");
@@ -106,7 +109,7 @@ class PlayState extends FlxState
 		add(powerPellets);
 
 		//Gestor de fantasmas
-		gFantasmas = new GestorFantasmas(valorParedes, dots, pacman);
+		gFantasmas = new GestorFantasmas(valorParedes, gestorValores, dots, pacman);
 		add(gFantasmas);
 		gFantasmas.nuevoFantasma(Modulo.TipoIA.Blinky);
 		gFantasmas.nuevoFantasma(Modulo.TipoIA.Pinky);

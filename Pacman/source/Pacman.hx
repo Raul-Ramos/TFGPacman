@@ -19,14 +19,19 @@ class Pacman extends FlxSprite
 	private var rightCommand:Bool = false;
 	private var command:Bool = false;
 	
+	private var regularSpeed:Float;
+	private var currentSpeed:Float;
+	private var frightSpeed:Float;
+	
 	private var blocMov:Bool = false;
 	
-	public function new(mapa:Array<Array<Int>>, X:Float=0, Y:Float=0) 
+	public function new(mapa:Array<Array<Int>>, gv:GestorValoresJuego, X:Float=0, Y:Float=0) 
 	{
 		super(X, Y);
 		
-		maxVelocity.x = 200;
 		this.mapa = mapa;
+		regularSpeed = currentSpeed = gv.getPacmanSpeed();
+		frightSpeed = gv.getFrightPacmanSpeed();
 		
 		loadGraphic(AssetPaths.pacmanO__png, true, 50, 50);
 		
@@ -109,7 +114,7 @@ class Pacman extends FlxSprite
 			} //TODO: Esta cosa tan fea está aquí porque las colisiones no funcionan bien
 			else if ( this.x < 0.5 && facing == FlxObject.LEFT ) {
 				this.x = (mapa[0].length + 1) * 50;
-				this.velocity.x = -maxVelocity.x;
+				this.velocity.x = -currentSpeed;
 				blocMov = true;
 
 				
@@ -126,7 +131,7 @@ class Pacman extends FlxSprite
 					if (mapa[nowy - 1][nowx] < 1) {
 						upCommand = false;
 						this.velocity.x = 0;
-						this.velocity.y = -maxVelocity.x;
+						this.velocity.y = -currentSpeed;
 						facing = FlxObject.UP;
 						angle = 90;
 					}
@@ -134,14 +139,14 @@ class Pacman extends FlxSprite
 					if (mapa[nowy + 1][nowx] < 1) {
 						downCommand = false;
 						this.velocity.x = 0;
-						this.velocity.y = maxVelocity.x;
+						this.velocity.y = currentSpeed;
 						facing = FlxObject.DOWN;
 						angle = -90;
 					}
 				} else if (rightCommand) {
 					if ((mapa[nowy][nowx + 1] < 1)) {
 						rightCommand = false;
-						this.velocity.x = maxVelocity.x;
+						this.velocity.x = currentSpeed;
 						this.velocity.y = 0;
 						facing = FlxObject.RIGHT;
 						angle = 0;
@@ -149,7 +154,7 @@ class Pacman extends FlxSprite
 				} else {
 					if ((mapa[nowy][nowx - 1] < 1)) {
 						leftCommand = false;
-						this.velocity.x = -maxVelocity.x;
+						this.velocity.x = -currentSpeed;
 						this.velocity.y = 0;
 						facing = FlxObject.LEFT;
 						angle = 0;
@@ -157,5 +162,13 @@ class Pacman extends FlxSprite
 				}
 			}
 		}
+	}
+	
+	public function iniciarFright():Void {
+		currentSpeed = frightSpeed;
+	}
+	
+	public function acabarFright():Void {
+		currentSpeed = regularSpeed;
 	}
 }

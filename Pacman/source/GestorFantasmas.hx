@@ -29,6 +29,7 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 	private var restanteFright:Int = 0;
 	
 	//Variables del ciclo scatter-chase
+	//TODO: Solo está para el nivel 1
 	private var duracionCiclos:Array<Int> = [7, 20, 7, 20, 5, 20, 5];
 	private var fase:Int = -1;
 	private var restanteFase:Int;
@@ -36,8 +37,9 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 	//Dots
 	private var dots:FlxTypedGroup<Dot>;
 	
+	private var gestorValores:GestorValoresJuego;
 	
-	public function new(mapa:Array<Array<Int>>, dots:FlxTypedGroup<Dot>, pacman:Pacman) 
+	public function new(mapa:Array<Array<Int>>, gestorValores:GestorValoresJuego, dots:FlxTypedGroup<Dot>, pacman:Pacman) 
 	{
 		super(0, 0, 4);
 		
@@ -45,6 +47,8 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 		this.dots = dots;
 		this.pacman = pacman;
 		fantasmasCautivos = new Array<Fantasma>();
+		
+		this.gestorValores = gestorValores;
 		
 		//Busca los espacios disponibles de spawn para los fantasmas
 		espaciosDisponibles = new Array<FlxPoint>();
@@ -104,7 +108,7 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 		var modulo:Modulo = null;
 		
 		switch(tipo) {
-			case TipoIA.Blinky: modulo = new ModuloBlinky(mapa, pacman);
+			case TipoIA.Blinky: modulo = new ModuloBlinky(mapa, pacman, gestorValores, dots);
 			case TipoIA.Pinky: modulo = new ModuloPinky(mapa, pacman);
 			case TipoIA.Clyde: modulo = new ModuloClyde(mapa, pacman);
 			case TipoIA.Inky:
@@ -121,7 +125,7 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 		}
 		
 		//Se crea el fantasma
-		var fantasma:Fantasma = new Fantasma(posicion.x * 50, posicion.y * 50, modulo);
+		var fantasma:Fantasma = new Fantasma(posicion.x * 50, posicion.y * 50, gestorValores.getGhostSpeed(), modulo);
 		
 		//Se asigna la esquina hogar
 		var vEsquina:Int = length % 4;
@@ -150,19 +154,25 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 	}
 	
 	public function iniciarFright() {
-		restanteFright = FlxG.updateFramerate * 6;
+		restanteFright = FlxG.updateFramerate * gestorValores.getFrightTime();
 		
 		for (i in members) {
 			if (fantasmasCautivos.indexOf(i) == -1) {
+				i.maxVelocity.x = gestorValores.getFrightGhostSpeed();
+				if (i.getCurrentVelocity() > i.maxVelocity.x) {
+					i.setCurrentVelocity(i.maxVelocity.x);
+				}
 				i.iniciarFrightMode();
 			}
 		}
+		pacman.iniciarFright();
 	}
 	
 	override public function update():Void
 	{
 		super.update();
 		
+		//Liberacion de fantasmas
 		if (fantasmasCautivos.length > 0) {
 			if (fantasmasCautivos.length == 1) {
 				if (dots.countDead() >= Math.floor(dots.length/3)) {
@@ -180,12 +190,20 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 			}
 		}
 		
+		//Fright
 		if (restanteFright > 0) {
 			restanteFright--;
 			if (restanteFright == 0) {
 				for (i in members) {
+					//Lo pongo antes del acabarFrightMode porque Blinky
+					//cambia su max velocity si esta en elroy
+					i.maxVelocity.x = gestorValores.getGhostSpeed();
+					if (i.getCurrentVelocity() == i.maxVelocity.x) {
+						i.setCurrentVelocity(i.maxVelocity.x);
+					}
 					i.acabarFrightMode();
 				}
+				pacman.acabarFright();
 			} else {
 				if (restanteFright < FlxG.drawFramerate * 2 && restanteFright % 10 == 0) {
 					for (i in members) {
@@ -195,6 +213,7 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 			}
 		}
 		
+		//Cambio de fase de seguimiento
 		if (fase != -1) {
 			if ( restanteFase == 0 ) {
 				if (fase + 1 > duracionCiclos.length) {

@@ -4,11 +4,11 @@ package ;
  * ...
  * @author Goldy
  */
-class gestorValoresJuego
+class GestorValoresJuego
 {
-	private var nivel:Int = 0;
+	private var nivel:Int = 1;
 	
-	private var velocidadBase:Int = 200;
+	private var velocidadBase:Float = 200;
 	
 	//Dependientes de nivel
 	private var pacmanSpeed:Array<Array<Int>> = [
@@ -39,27 +39,31 @@ class gestorValoresJuego
 			return -1;
 		}
 		
-		var i:Int = 0
-		while (array[0].length - 1 > i  || array[0][i] <= nivel) {
+		var i:Int = 0;
+		while (array[0].length - 1 > i  && array[0][i] < nivel) {
 			i++;
 		}
-		return [1][i];
+		
+		return array[1][i];
 	}
 	
-	public function getPacmanSpeed():Int {
-		return getForThisLevel(pacmanSpeed);
+	public function getVelocidadBase():Float {
+		return velocidadBase;
 	}
-	public function getFrightPacmanSpeed():Int {
-		return getForThisLevel(frightPacmanSpeed);
+	public function getPacmanSpeed():Float {
+		return velocidadBase * (getForThisLevel(pacmanSpeed) / 100 );
 	}
-	public function getGhostSpeed():Int {
-		return getForThisLevel(ghostSpeed);
+	public function getFrightPacmanSpeed():Float {
+		return velocidadBase * (getForThisLevel(frightPacmanSpeed) / 100);
 	}
-	public function getFrightGhostSpeed():Int {
-		return getForThisLevel(frightGhostSpeed);
+	public function getGhostSpeed():Float {
+		return velocidadBase * (getForThisLevel(ghostSpeed) / 100);
 	}
-	public function getGhostTunelSpeed():Int {
-		return getForThisLevel(ghostTunelSpeed);
+	public function getFrightGhostSpeed():Float {
+		return velocidadBase * (getForThisLevel(frightGhostSpeed) / 100);
+	}
+	public function getGhostTunelSpeed():Float {
+		return velocidadBase * (getForThisLevel(ghostTunelSpeed) / 100);
 	}
 	public function getFrightTime():Int {
 		return getForThisLevel(frightTime);

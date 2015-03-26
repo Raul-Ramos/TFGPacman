@@ -11,6 +11,13 @@ class ModuloBlinky extends Modulo
 {
 	private var pacman:Pacman;
 	
+	private var puntosElroy:Array<Array<Int>> = [
+	[1,2,3,6,9,12,15,19],
+	[20,30,40,50,60,80,100,120]];
+	private var velocidadElroy:Array<Array<Int>> = [
+	[1,2,5],
+	[80,90,100]];
+	
 	public function new(mapa:Array<Array<Int>>, pacman:Pacman) {
 		super(mapa);
 		this.pacman = pacman;

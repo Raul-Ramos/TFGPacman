@@ -151,6 +151,7 @@ class PlayState extends FlxState
 		FlxG.collide(pacman, _mWalls);
 		FlxG.overlap(pacman, dots, comerPunto);
 		FlxG.overlap(pacman, powerPellets, comerPowerPellet);
+		FlxG.overlap(pacman, gFantasmas, pacmanFantasma);
 	}
 	
 	private function placeEntities(entityName:String, entityData:Xml):Void
@@ -176,6 +177,10 @@ class PlayState extends FlxState
 		pp.kill();
 		actualizarPuntos(50);
 		gFantasmas.iniciarFright();
+	}
+	
+	private function pacmanFantasma(pacman:Pacman, fantasma:FlxSprite):Void {
+		trace("algo es algo");
 	}
 	
 	private function actualizarPuntos(suma:Int):Void {

@@ -1,6 +1,5 @@
 package ;
 
-import flixel.group.FlxTypedSpriteGroup;
 import Modulo.TipoIA;
 import flixel.util.FlxPoint;
 import flixel.group.FlxTypedGroup;
@@ -11,7 +10,7 @@ import flixel.FlxG;
  * ...
  * @author Goldy
  */
-class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
+class GestorFantasmas extends FlxTypedGroup<Fantasma>
 {
 	//Variables de uso
 	private var mapa:Array<Array<Int>>;
@@ -41,7 +40,7 @@ class GestorFantasmas extends FlxTypedSpriteGroup<Fantasma>
 	
 	public function new(mapa:Array<Array<Int>>, gestorValores:GestorValoresJuego, dots:FlxTypedGroup<Dot>, pacman:Pacman) 
 	{
-		super(0, 0, 4);
+		super(4);
 		
 		this.mapa = mapa;
 		this.dots = dots;

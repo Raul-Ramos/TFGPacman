@@ -14,22 +14,24 @@ class MapaPresion
 		
 		for (y in 1...mapa.length - 1) {
 			for (x in 1...mapa[y].length - 1) {
-				cantidad = 0;
-				
-				if (mapa[y - 1][x] < 1) cantidad++;
-				if (mapa[y + 1][x] < 1) cantidad++;
-				if (mapa[y][x + 1] < 1) cantidad++;
-				if (mapa[y][x - 1] < 1) cantidad++;
-				
-				if (cantidad > 2) {
+				if (mapa[y][x] < 1) {
+					cantidad = 0;
 					
-					//-2 To do
-					up = if (mapa[y - 1][x] < 1) -2 else -1;
-					down =  if (mapa[y + 1][x] < 1) -2 else -1;
-					left = if (mapa[y][x - 1] < 1) -2 else -1;
-					right = if (mapa[y][x +1 ] < 1) -2 else -1;
+					if (mapa[y - 1][x] < 1) cantidad++;
+					if (mapa[y + 1][x] < 1) cantidad++;
+					if (mapa[y][x + 1] < 1) cantidad++;
+					if (mapa[y][x - 1] < 1) cantidad++;
 					
-					vertices.push(new Vertice(x, y, up, down, left, right));
+					if (cantidad > 2) {
+						
+						//-2 To do
+						up = if (mapa[y - 1][x] < 1) -2 else -1;
+						down =  if (mapa[y + 1][x] < 1) -2 else -1;
+						left = if (mapa[y][x - 1] < 1) -2 else -1;
+						right = if (mapa[y][x +1 ] < 1) -2 else -1;
+						
+						vertices.push(new Vertice(x, y, up, down, left, right));
+					}
 				}
 			}
 		}

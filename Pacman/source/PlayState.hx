@@ -9,6 +9,7 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.group.FlxTypedGroup;
+import pressmap.MapaPresion;
 
 import flixel.util.FlxColor;
 
@@ -50,7 +51,7 @@ class PlayState extends FlxState
 		_mWalls.loadMap(_mWalls.getData(), AssetPaths.tileset__png, 50, 50, FlxTilemap.AUTO);
 		_mWalls.setTileProperties(1, FlxObject.NONE);
 		_mWalls.setTileProperties(2, FlxObject.ANY);
-		add(_mWalls);
+		//add(_mWalls);
 		
 		//Crea matriz bidimensional con los datos de las paredes
 		var fila:Array<Int>;
@@ -70,6 +71,9 @@ class PlayState extends FlxState
 			valorParedes[f] = fila;
 		}
 		
+		var mapaPresion:MapaPresion = new MapaPresion(valorParedes);
+		
+		/*
 		//Creación de zonas
 		dots = new FlxTypedGroup<Dot>();
 		var zonas:Array<Int> = _map.getIntArrayValues("zonas");
@@ -130,6 +134,7 @@ class PlayState extends FlxState
 		add(scoreTxt);
 		
 		gFantasmas.empezarCicloSC();
+		*/
 	}
 	
 	/**

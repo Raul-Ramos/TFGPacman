@@ -112,10 +112,52 @@ class MapaPresion
 			}
 		}
 		
-		for (i in 0...vertices.length) {
-			trace(i, vertices[i].x, vertices[i].y, vertices[i].vecinos.toString());
+		var time:Int = 0;
+		var verticesBC:Array<VerticeBC> = new Array<VerticeBC>();
+		for (v in 0...vertices.length) {
+			verticesBC.push(new VerticeBC(vertices[v]));
+		}
+		
+		for (v in 0...verticesBC.length) {
+			if (!verticesBC[v].visited) {
+				getArticulationPoints(v, 0, verticesBC);
+			}
 		}
 	}
+	
+	private function getArticulationPoints(i:Int, time:Int, verticesBC:Array<VerticeBC>) {
+		var u:VerticeBC = verticesBC[i];
+		trace(u.v.x, u.v.y);
+		u.visited = true;
+		u.st = time + 1;
+		u.low = u.st;
+		var dfsChild:Int = 0;
+		var ni:VerticeBC;
+		for (v in 0...u.v.vecinos.length) {
+			if (u.v.vecinos[v] != -1) {
+				ni = verticesBC[u.v.vecinos[v]];
+				if (!ni.visited) {
+					ni.parents = i;
+					getArticulationPoints(u.v.vecinos[v], u.st, verticesBC);
+					dfsChild++;
+					if (ni.low < u.low) {
+						u.low = ni.low;
+					}
+				} else if ( u.v.vecinos[v] != u.parents) {
+					if (ni.st < u.low) {
+						u.low = ni.st;
+					}
+				}
+			}
+		}
+		
+		if ((u.low == u.st && dfsChild > 0 && u.parents != -1) ||
+		(u.parents == -1 && dfsChild > 1)) {
+			trace(u.v.x, u.v.y, " Es una articulacion.");
+		}
+		
+	}
+	
 }
 
 class Vertice
@@ -131,5 +173,17 @@ class Vertice
 		vecinos[1] = down;
 		vecinos[2] = left;
 		vecinos[3] = right;
+	}
+}
+
+class VerticeBC{
+	public var v:Vertice;
+	public var visited:Bool = false;
+	public var st:Int;
+	public var low:Int;
+	public var parents:Int = -1;
+	
+	public function new(vertice:Vertice) {
+		this.v = vertice;
 	}
 }

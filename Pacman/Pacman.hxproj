@@ -28,7 +28,7 @@
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
-    <option enabledebug="False" />
+    <option enabledebug="True" />
     <option additional="-swf-version 11.8" />
   </build>
   <!-- haxelib libraries -->

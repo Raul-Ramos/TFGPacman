@@ -118,16 +118,17 @@ class MapaPresion
 			verticesBC.push(new VerticeBC(vertices[v]));
 		}
 		
+		var stack:Array<String> = new Array<String>();
 		for (v in 0...verticesBC.length) {
 			if (!verticesBC[v].visited) {
-				getArticulationPoints(v, 0, verticesBC);
+				getArticulationPoints(v, 0, verticesBC, stack);
 			}
 		}
 	}
 	
-	private function getArticulationPoints(i:Int, time:Int, verticesBC:Array<VerticeBC>) {
+	private function getArticulationPoints(i:Int, time:Int, verticesBC:Array<VerticeBC>, stack:Array<String>) {
 		var u:VerticeBC = verticesBC[i];
-		trace(u.v.x, u.v.y);
+		//trace(u.v.x, u.v.y);
 		u.visited = true;
 		u.st = time + 1;
 		u.low = u.st;
@@ -137,25 +138,36 @@ class MapaPresion
 			if (u.v.vecinos[v] != -1) {
 				ni = verticesBC[u.v.vecinos[v]];
 				if (!ni.visited) {
+					stack.push(entradaStck(u,ni));
 					ni.parents = i;
-					getArticulationPoints(u.v.vecinos[v], u.st, verticesBC);
-					dfsChild++;
+					getArticulationPoints(u.v.vecinos[v], u.st, verticesBC, stack);
+					if (ni.low >= u.st) {
+						outputComp(stack, entradaStck(u,ni));
+					}
 					if (ni.low < u.low) {
 						u.low = ni.low;
 					}
-				} else if ( u.v.vecinos[v] != u.parents) {
+				} else if ( u.v.vecinos[v] != u.parents && ni.st < u.st) {
+					stack.push(entradaStck(u,ni));
 					if (ni.st < u.low) {
 						u.low = ni.st;
 					}
 				}
 			}
 		}
-		
-		if ((u.low == u.st && dfsChild > 0 && u.parents != -1) ||
-		(u.parents == -1 && dfsChild > 1)) {
-			trace(u.v.x, u.v.y, " Es una articulacion.");
-		}
-		
+	}
+	
+	private function entradaStck(u:VerticeBC, v:VerticeBC):String {
+		return Std.string(u.v.x) + "," + Std.string(u.v.y) + " - " + Std.string(v.v.x) + "," + Std.string(v.v.y);
+	}
+	
+	private function outputComp(stack:Array<String>, hasta:String) {
+		trace("Encontrado nuevo componente biconectado");
+		var e:String;
+		do { 
+			e = stack.pop();
+			trace(e);
+		} while (e != hasta);
 	}
 	
 }

@@ -28,12 +28,10 @@ class MapaPresion
 			pressMap[y] = linea;
 		}
 		
-		trace(pressMap);
-		
 		var vertices:Array<Vertice> = new Array<Vertice>();
 		var up, down, left, right,cantidad:Int;
 		
-		//Crea los vectores
+		//Crea los vertices
 		for (y in 1...mapa.length - 1) {
 			for (x in 1...mapa[y].length - 1) {
 				if (mapa[y][x] < 1) {
@@ -59,14 +57,18 @@ class MapaPresion
 		}
 		
 		var posX, posY, from, found:Int;
+		var camino:Array<FlxPoint>;
 		
 		//Busca conexiones entre vectores para crear grafo
 		for (v in 0...vertices.length) {
 			var vertice:Vertice = vertices[v];
 			for (i in 0...vertice.vecinos.length) {
+				camino = new Array<FlxPoint>();
+				
 				if (vertice.vecinos[i] == -2) {
 					posX = vertice.x;
 					posY = vertice.y;
+					
 					
 					switch(i) {
 						case 0:
@@ -89,6 +91,8 @@ class MapaPresion
 						if (posX > mapa[0].length - 1) posX = 0;
 						if (posY < 0) posY = mapa.length - 1;
 						if (posY > mapa.length - 1) posY = 0;
+						
+						camino.push(new FlxPoint(posX, posY));
 						
 						found = -1;
 						for (z in 0...vertices.length) {
@@ -114,20 +118,26 @@ class MapaPresion
 								posX++;
 							} else {
 								vertice.vecinos[i] = -1;
+								vertice.caminoVecinos[i] = camino;
 							}
 						}
 						//Si se ha encontrado
 						else {
 							vertice.vecinos[i] = found;
+							vertice.caminoVecinos[i] = camino;
 							switch (from) {
 								case FlxObject.UP:
 									vertices[found].vecinos[0] = v;
+									vertices[found].caminoVecinos[0] = invertirArray(camino, vertice);
 								case FlxObject.DOWN:
 									vertices[found].vecinos[1] = v;
+									vertices[found].caminoVecinos[1] = invertirArray(camino, vertice); 
 								case FlxObject.LEFT:
 									vertices[found].vecinos[2] = v;
+									vertices[found].caminoVecinos[2] = invertirArray(camino, vertice); 
 								default:
 									vertices[found].vecinos[3] = v;
+									vertices[found].caminoVecinos[3] = invertirArray(camino, vertice); 
 							}
 						}
 					}
@@ -154,6 +164,34 @@ class MapaPresion
 		}
 		
 		
+		//Coloca en el mapa de presión la identidad de cada zona, de -2 a abajo
+		var nodoP:Vertice;
+		var zona:Int = -2;
+		
+		//Por cada zona
+		for (z in 0...zonas.length) {
+			//Por cada vertice
+			for (v in zonas[z]) {
+				nodoP = vertices[v[0]];
+				for (vec in 0...nodoP.vecinos.length) {
+					if (nodoP.vecinos[vec] == v[1]) {
+						for (a in 0...nodoP.caminoVecinos[vec].length - 1) {
+							pressMap[Std.int(nodoP.caminoVecinos[vec][a].y)][Std.int(nodoP.caminoVecinos[vec][a].x)] = zona;
+						}
+					}
+				}
+			}
+			zona--;
+		}
+		
+	}
+	
+	private function invertirArray(array:Array<FlxPoint>, vertice:Vertice):Array<FlxPoint> {
+		var arrayN:Array<FlxPoint> = array.copy();
+		arrayN.pop();
+		arrayN.reverse();
+		arrayN.push(new FlxPoint(vertice.x, vertice.y));
+		return arrayN;
 	}
 	
 	private function getArticulationPoints(i:Int, time:Int, verticesBC:Array<VerticeBC>, stack:Array<Array<Int>>, zonas:Array<Array<Array<Int>>>) {
@@ -168,17 +206,17 @@ class MapaPresion
 			if (u.v.vecinos[v] != -1) {
 				ni = verticesBC[u.v.vecinos[v]];
 				if (!ni.visited) {
-					stack.push(entradaStck(i,v));
+					stack.push(entradaStck(i,u.v.vecinos[v]));
 					ni.parents = i;
 					getArticulationPoints(u.v.vecinos[v], u.st, verticesBC, stack, zonas);
 					if (ni.low >= u.st) {
-						outputComp(stack, entradaStck(i,v), zonas);
+						outputComp(stack, entradaStck(i,u.v.vecinos[v]), zonas);
 					}
 					if (ni.low < u.low) {
 						u.low = ni.low;
 					}
 				} else if ( u.v.vecinos[v] != u.parents && ni.st < u.st) {
-					stack.push(entradaStck(i,v));
+					stack.push(entradaStck(i,u.v.vecinos[v]));
 					if (ni.st < u.low) {
 						u.low = ni.st;
 					}
@@ -195,14 +233,12 @@ class MapaPresion
 	}
 	
 	private function outputComp(stack:Array<Array<Int>>, hasta:Array<Int>, zonas:Array<Array<Array<Int>>>) {
-		trace("Encontrado nuevo componente biconectado");
 		var e:Array<Int>;
 		var z:Array<Array<Int>> = new Array<Array<Int>>();
 		
 		do { 
 			e = stack.pop();
 			z.push(e);
-			trace(e[0], e[1]);
 		} while (!(e[0] == hasta[0] && e[1] == hasta[1]));
 		
 		zonas.push(z);
@@ -213,6 +249,7 @@ class MapaPresion
 class Vertice
 {
 	public var vecinos:Array<Int> = new Array<Int>();
+	public var caminoVecinos:Array<Array<FlxPoint>> = new Array<Array<FlxPoint>>();
 	public var x:Int;
 	public var y:Int;
 	
@@ -223,6 +260,13 @@ class Vertice
 		vecinos[1] = down;
 		vecinos[2] = left;
 		vecinos[3] = right;
+		
+		var camino:Array<FlxPoint>;
+		for (i in 0...4) {
+			camino = new Array<FlxPoint>();
+			camino.push(new FlxPoint(-1,-1));
+			caminoVecinos.push(camino);
+		}
 	}
 }
 

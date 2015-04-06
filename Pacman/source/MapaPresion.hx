@@ -1,5 +1,6 @@
 package  ;
 import flixel.FlxObject;
+import flixel.util.FlxPoint;
 
 /**
  * ...
@@ -7,11 +8,32 @@ import flixel.FlxObject;
  */
 class MapaPresion
 {
+	private var pressMap:Array<Array<Int>>;
+	
 	public function new(mapa:Array<Array<Int>>) 
 	{
+		
+		//Crea el mapa de presión
+		pressMap = new Array<Array<Int>>();
+		var linea:Array<Int>;
+		for (y in 0...mapa.length) {
+			linea = new Array<Int>();
+			for (x in 0...mapa[0].length) {
+				if (mapa[y][x] < 1) {
+					linea[x] = 0;
+				} else {
+					linea[x] = -1;
+				}
+			}
+			pressMap[y] = linea;
+		}
+		
+		trace(pressMap);
+		
 		var vertices:Array<Vertice> = new Array<Vertice>();
 		var up, down, left, right,cantidad:Int;
 		
+		//Crea los vectores
 		for (y in 1...mapa.length - 1) {
 			for (x in 1...mapa[y].length - 1) {
 				if (mapa[y][x] < 1) {
@@ -38,6 +60,7 @@ class MapaPresion
 		
 		var posX, posY, from, found:Int;
 		
+		//Busca conexiones entre vectores para crear grafo
 		for (v in 0...vertices.length) {
 			var vertice:Vertice = vertices[v];
 			for (i in 0...vertice.vecinos.length) {
@@ -112,21 +135,28 @@ class MapaPresion
 			}
 		}
 		
+		//Crea un grafo para busqueda de componentes biconectados
 		var time:Int = 0;
 		var verticesBC:Array<VerticeBC> = new Array<VerticeBC>();
 		for (v in 0...vertices.length) {
 			verticesBC.push(new VerticeBC(vertices[v]));
 		}
 		
-		var stack:Array<String> = new Array<String>();
+		//Array donde se guardan las zonas
+		var zonas:Array<Array<Array<Int>>> = new Array<Array<Array<Int>>>();
+		
+		//Busca componentes biconectados
+		var stack:Array<Array<Int>> = new Array<Array<Int>>();
 		for (v in 0...verticesBC.length) {
 			if (!verticesBC[v].visited) {
-				getArticulationPoints(v, 0, verticesBC, stack);
+				getArticulationPoints(v, 0, verticesBC, stack, zonas);
 			}
 		}
+		
+		
 	}
 	
-	private function getArticulationPoints(i:Int, time:Int, verticesBC:Array<VerticeBC>, stack:Array<String>) {
+	private function getArticulationPoints(i:Int, time:Int, verticesBC:Array<VerticeBC>, stack:Array<Array<Int>>, zonas:Array<Array<Array<Int>>>) {
 		var u:VerticeBC = verticesBC[i];
 		//trace(u.v.x, u.v.y);
 		u.visited = true;
@@ -138,17 +168,17 @@ class MapaPresion
 			if (u.v.vecinos[v] != -1) {
 				ni = verticesBC[u.v.vecinos[v]];
 				if (!ni.visited) {
-					stack.push(entradaStck(u,ni));
+					stack.push(entradaStck(i,v));
 					ni.parents = i;
-					getArticulationPoints(u.v.vecinos[v], u.st, verticesBC, stack);
+					getArticulationPoints(u.v.vecinos[v], u.st, verticesBC, stack, zonas);
 					if (ni.low >= u.st) {
-						outputComp(stack, entradaStck(u,ni));
+						outputComp(stack, entradaStck(i,v), zonas);
 					}
 					if (ni.low < u.low) {
 						u.low = ni.low;
 					}
 				} else if ( u.v.vecinos[v] != u.parents && ni.st < u.st) {
-					stack.push(entradaStck(u,ni));
+					stack.push(entradaStck(i,v));
 					if (ni.st < u.low) {
 						u.low = ni.st;
 					}
@@ -157,17 +187,25 @@ class MapaPresion
 		}
 	}
 	
-	private function entradaStck(u:VerticeBC, v:VerticeBC):String {
-		return Std.string(u.v.x) + "," + Std.string(u.v.y) + " - " + Std.string(v.v.x) + "," + Std.string(v.v.y);
+	private function entradaStck(u:Int, v:Int):Array<Int> {
+		var nodo:Array<Int> = new Array<Int>();
+		nodo.push(u);
+		nodo.push(v);
+		return nodo;
 	}
 	
-	private function outputComp(stack:Array<String>, hasta:String) {
+	private function outputComp(stack:Array<Array<Int>>, hasta:Array<Int>, zonas:Array<Array<Array<Int>>>) {
 		trace("Encontrado nuevo componente biconectado");
-		var e:String;
+		var e:Array<Int>;
+		var z:Array<Array<Int>> = new Array<Array<Int>>();
+		
 		do { 
 			e = stack.pop();
-			trace(e);
-		} while (e != hasta);
+			z.push(e);
+			trace(e[0], e[1]);
+		} while (!(e[0] == hasta[0] && e[1] == hasta[1]));
+		
+		zonas.push(z);
 	}
 	
 }

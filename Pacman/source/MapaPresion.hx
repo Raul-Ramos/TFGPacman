@@ -8,16 +8,16 @@ import flixel.util.FlxPoint;
  */
 class MapaPresion
 {
-	private var pressMap:Array<Array<Int>>;
+	private var pressMap:Array<Array<Float>>;
 	
 	public function new(mapa:Array<Array<Int>>) 
 	{
 		
-		//Crea el mapa de presión
-		pressMap = new Array<Array<Int>>();
-		var linea:Array<Int>;
+		//////////Crea el mapa de presión//////////
+		pressMap = new Array<Array<Float>>();
+		var linea:Array<Float>;
 		for (y in 0...mapa.length) {
-			linea = new Array<Int>();
+			linea = new Array<Float>();
 			for (x in 0...mapa[0].length) {
 				if (mapa[y][x] < 1) {
 					linea[x] = 0;
@@ -31,7 +31,7 @@ class MapaPresion
 		var vertices:Array<Vertice> = new Array<Vertice>();
 		var up, down, left, right,cantidad:Int;
 		
-		//Crea los vertices
+		//////////Crea los vertices//////////
 		for (y in 1...mapa.length - 1) {
 			for (x in 1...mapa[y].length - 1) {
 				if (mapa[y][x] < 1) {
@@ -59,7 +59,7 @@ class MapaPresion
 		var posX, posY, from, found:Int;
 		var camino:Array<FlxPoint>;
 		
-		//Busca conexiones entre vectores para crear grafo
+		//////////Busca conexiones entre vectores para crear grafo//////////
 		for (v in 0...vertices.length) {
 			var vertice:Vertice = vertices[v];
 			for (i in 0...vertice.vecinos.length) {
@@ -145,7 +145,7 @@ class MapaPresion
 			}
 		}
 		
-		//Crea un grafo para busqueda de componentes biconectados
+		//////////Crea un grafo para busqueda de componentes biconectados//////////
 		var time:Int = 0;
 		var verticesBC:Array<VerticeBC> = new Array<VerticeBC>();
 		for (v in 0...vertices.length) {
@@ -155,7 +155,7 @@ class MapaPresion
 		//Array donde se guardan las zonas
 		var zonas:Array<Array<Array<Int>>> = new Array<Array<Array<Int>>>();
 		
-		//Busca componentes biconectados
+		//////////Busca componentes biconectados//////////
 		var stack:Array<Array<Int>> = new Array<Array<Int>>();
 		for (v in 0...verticesBC.length) {
 			if (!verticesBC[v].visited) {
@@ -164,9 +164,9 @@ class MapaPresion
 		}
 		
 		
-		//Coloca en el mapa de presión la identidad de cada zona, de -2 a abajo
+		//////////Coloca en el mapa de presión la identidad de cada zona//////////
 		var nodoP:Vertice;
-		var zona:Int = -2;
+		var zona:Int = 1;
 		
 		//Por cada zona
 		for (z in 0...zonas.length) {
@@ -181,8 +181,41 @@ class MapaPresion
 					}
 				}
 			}
-			zona--;
+			zona++;
 		}
+		
+		//////////Cuenta el tamaño de cada zona//////////
+		var sizeZonas:Array<Int> = new Array<Int>();
+		for (i in 0...zonas.length) {
+			sizeZonas[i] = 0;
+		}
+		
+		for (y in 0...pressMap.length) {
+			for (x in 0...pressMap[y].length) {
+				sizeZonas[Std.int(pressMap[y][x]) - 1]++;
+			}
+		}
+		
+		//////////Busca el maximo//////////
+		var maximo:Int = 0;
+		for (i in sizeZonas) {
+			if (i > maximo) {
+				maximo = i;
+			}
+		}
+		
+		//////////Asigna presión en función del tamaño relativo del area//////////
+		var grupo:Float;
+		for (y in 0...pressMap.length) {
+			for (x in 0...pressMap[y].length) {
+				grupo = pressMap[y][x];
+				if (grupo > 0) {
+					pressMap[y][x] = 10 * (1 - (sizeZonas[Std.int(grupo) - 1] / maximo));
+				}
+			}
+		}
+		
+		trace(pressMap);
 		
 	}
 	

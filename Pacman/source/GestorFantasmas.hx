@@ -231,7 +231,16 @@ class GestorFantasmas extends FlxTypedGroup<Fantasma>
 		}
 	}
 	
-	public function matar(f:Fantasma) {
+	public function matar(f:Fantasma):Int {
 		f.getIA().matar(salida);
+		
+		var puntos:Int = 200;
+		for (i in members) {
+			if (i != f && i.getIA().isDead()) {
+				puntos *= 2;
+			}
+		}
+		
+		return puntos;
 	}
 }

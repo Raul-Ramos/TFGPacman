@@ -127,7 +127,6 @@ class Modulo
 	{
 		this.salidaCasa = salida;
 		fantasma.matar();
-		trace(salida.x, salida.y);
 	}
 	
 	private function revivir():Void

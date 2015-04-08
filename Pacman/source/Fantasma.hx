@@ -50,7 +50,7 @@ class Fantasma extends FlxSpriteGroup
 		base.animation.add("panicoB", [4, 5], 15, true);
 		base.animation.add("panicoW", [6, 7], 15, true);
 
-		maxVelocity.x = currentVelocity = velocidad;
+		maxVelocity.x = currentVelocity = velocidadNormal = velocidad;
 		facing = FlxObject.RIGHT;
 	}
 	
@@ -138,7 +138,6 @@ class Fantasma extends FlxSpriteGroup
 	
 	public function iniciarFrightMode(velocidad:Float):Void
 	{
-		velocidadNormal = maxVelocity.x;
 		maxVelocity.x = velocidad;
 		if (currentVelocity > maxVelocity.x) {
 			currentVelocity = maxVelocity.x;
@@ -184,12 +183,16 @@ class Fantasma extends FlxSpriteGroup
 	}
 	
 	public function matar() {
-		base.set_alpha(0);
 		acabarFrightMode();
+		maxVelocity.x = velocidadNormal * 2;
+		currentVelocity = maxVelocity.x;
+		base.set_alpha(0);
 		decidirAnimacion();
 	}
 	
 	public function revivir() {
+		maxVelocity.x = velocidadNormal;
+		currentVelocity = maxVelocity.x;
 		base.set_alpha(1);
 	}
 	

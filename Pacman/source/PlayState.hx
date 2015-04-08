@@ -181,7 +181,11 @@ class PlayState extends FlxState
 	
 	private function pacmanFantasma(pacman:Pacman, spriteF:FlxSprite):Void {
 		var fantasma:Fantasma = gFantasmas.identificarFantasma(spriteF);
-		
+		if (fantasma.getIA().isFrightened()) {
+			gFantasmas.matar(fantasma);
+		} else if (!fantasma.getIA().isDead()) {
+			trace("te moriiste");
+		}
 	}
 	
 	private function actualizarPuntos(suma:Int):Void {

@@ -11,7 +11,9 @@ class Modulo
 	private var fantasma:Fantasma = null;
 	private var mapa:Array<Array<Int>>;
 	private var color:String = null;
+	
 	private var esquina:FlxPoint = new FlxPoint(0, 0);
+	private var salidaCasa:FlxPoint = null;
 	
 	private var frightened:Bool = false;
 	private var scatter:Bool = false;
@@ -21,30 +23,15 @@ class Modulo
 		this.mapa = mapa;
 	}
 	
-	public function setFantasma(fantasma:Fantasma):Void 
-	{
-		this.fantasma = fantasma;
-	}
-	
-	public function setEsquina(esquina:FlxPoint):Void
-	{
-		this.esquina = esquina;
-	}
-	
-	public function getColor():String 
-	{
-		return null;
-	}
-	
-	public function getMapa():Array<Array<Int>>
-	{
-		return mapa;
-	}
-	
 	public function movimientoRegular():Int
 	{
 		if (fantasma == null) {
 			return FlxObject.NONE;
+		}
+		
+		if (isDead() && Math.floor(fantasma.getMidpoint().x / 50) == salidaCasa.x
+		&& Math.floor(fantasma.getMidpoint().y / 50) == salidaCasa.y) {
+			revivir();
 		}
 		
 		//Casillas
@@ -90,7 +77,9 @@ class Modulo
 					return FlxObject.RIGHT;
 				}
 			} else if (caminosLibres != 0) {
-				if (frightened) {
+				if ( isDead()) {
+					return movimientoMuerto(facing);
+				} else if (frightened) {
 					return movimientoPanico();
 				} else {
 					if (scatter) {
@@ -104,33 +93,6 @@ class Modulo
 		
 		return FlxObject.NONE;
 		
-	}
-	
-	private function decidirCamino(facing:Int):Int {
-		return FlxObject.NONE;
-	}
-	
-	private function caminoScatter(facing:Int) {
-		return FlxObject.NONE;
-	}
-	
-	public function alternarSC():Void
-	{
-		if (scatter) {
-			scatter = false;
-		} else {
-			scatter = true;
-		}
-	}
-	
-	public function setFrightened(asustado:Bool):Void
-	{ 
-		frightened = asustado;
-	}
-	
-	public function isFrightened():Bool
-	{
-		return frightened;
 	}
 	
 	private function movimientoPanico():Int
@@ -147,6 +109,82 @@ class Modulo
 		if (facing != FlxObject.RIGHT && mapa[fy][fx - 1] == 0) { disponibles.push(FlxObject.LEFT); }
 		
 		return disponibles[Std.random(disponibles.length)];
+	}
+	
+	private function movimientoMuerto(facing:Int):Int
+	{
+		var xthis:Int = Math.floor(fantasma.getMidpoint().x / 50);
+		var ythis:Int = Math.floor(fantasma.getMidpoint().y / 50);
+		
+		var xObjetivo:Int = Math.floor(salidaCasa.x);
+		var yObjetivo:Int = Math.floor(salidaCasa.y);
+		
+		return Pathfinding.metodoTradicional(mapa, xthis, ythis, xObjetivo, yObjetivo, facing);
+		
+	}
+	
+	public function matar(salida:FlxPoint):Void
+	{
+		this.salidaCasa = salida;
+		fantasma.matar();
+		trace(salida.x, salida.y);
+	}
+	
+	private function revivir():Void
+	{
+		this.salidaCasa = null;
+		fantasma.revivir();
+	}
+	
+	public function alternarSC():Void
+	{
+		if (scatter) {
+			scatter = false;
+		} else {
+			scatter = true;
+		}
+	}
+	
+	private function decidirCamino(facing:Int):Int {
+		return FlxObject.NONE;
+	}
+	
+	private function caminoScatter(facing:Int) {
+		return FlxObject.NONE;
+	}
+	
+	public function setFantasma(fantasma:Fantasma):Void 
+	{
+		this.fantasma = fantasma;
+	}
+	
+	public function setEsquina(esquina:FlxPoint):Void
+	{
+		this.esquina = esquina;
+	}
+	
+	public function getColor():String 
+	{
+		return null;
+	}
+	
+	public function getMapa():Array<Array<Int>>
+	{
+		return mapa;
+	}
+	
+	public function setFrightened(asustado:Bool):Void
+	{ 
+		frightened = asustado;
+	}
+	
+	public function isFrightened():Bool
+	{
+		return frightened;
+	}
+	
+	public function isDead():Bool {
+		return this.salidaCasa != null;
 	}
 }
 

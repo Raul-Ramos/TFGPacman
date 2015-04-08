@@ -165,13 +165,10 @@ class GestorFantasmas extends FlxTypedGroup<Fantasma>
 	public function iniciarFright() {
 		restanteFright = FlxG.updateFramerate * gestorValores.getFrightTime();
 		
+		var velocidad:Float = gestorValores.getFrightGhostSpeed();
 		for (i in members) {
-			if (fantasmasCautivos.indexOf(i) == -1) {
-				i.maxVelocity.x = gestorValores.getFrightGhostSpeed();
-				if (i.getCurrentVelocity() > i.maxVelocity.x) {
-					i.setCurrentVelocity(i.maxVelocity.x);
-				}
-				i.iniciarFrightMode();
+			if (fantasmasCautivos.indexOf(i) == -1 && !i.getIA().isDead()) {
+				i.iniciarFrightMode(velocidad);
 			}
 		}
 		pacman.iniciarFright();
@@ -204,12 +201,6 @@ class GestorFantasmas extends FlxTypedGroup<Fantasma>
 			restanteFright--;
 			if (restanteFright == 0) {
 				for (i in members) {
-					//Lo pongo antes del acabarFrightMode porque Blinky
-					//cambia su max velocity si esta en elroy
-					i.maxVelocity.x = gestorValores.getGhostSpeed();
-					if (i.getCurrentVelocity() == i.maxVelocity.x) {
-						i.setCurrentVelocity(i.maxVelocity.x);
-					}
 					i.acabarFrightMode();
 				}
 				pacman.acabarFright();
@@ -238,5 +229,9 @@ class GestorFantasmas extends FlxTypedGroup<Fantasma>
 				restanteFase--;
 			}
 		}
+	}
+	
+	public function matar(f:Fantasma) {
+		f.getIA().matar(salida);
 	}
 }

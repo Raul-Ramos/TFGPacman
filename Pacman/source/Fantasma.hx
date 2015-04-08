@@ -21,6 +21,8 @@ class Fantasma extends FlxSpriteGroup
 	
 	private var frightBlue:Bool;
 	private var currentVelocity:Float;
+	
+	private var velocidadNormal:Float = -1;
 
 	public function new(X:Float = 0, Y:Float = 0, velocidad:Float, moduloIa:Modulo.Modulo) 
 	{
@@ -134,8 +136,14 @@ class Fantasma extends FlxSpriteGroup
 		}
 	}
 	
-	public function iniciarFrightMode():Void
+	public function iniciarFrightMode(velocidad:Float):Void
 	{
+		velocidadNormal = maxVelocity.x;
+		maxVelocity.x = velocidad;
+		if (currentVelocity > maxVelocity.x) {
+			currentVelocity = maxVelocity.x;
+		}
+		
 		ia.setFrightened(true);
 		ojos.alpha = 0;
 		frightBlue = true;
@@ -144,6 +152,11 @@ class Fantasma extends FlxSpriteGroup
 	
 	public function acabarFrightMode():Void
 	{
+		maxVelocity.x = velocidadNormal;
+		if (currentVelocity == maxVelocity.x) {
+			setCurrentVelocity(maxVelocity.x);
+		}
+		
 		ia.setFrightened(false);
 		ojos.alpha = 1;
 		decidirAnimacion();
@@ -168,6 +181,16 @@ class Fantasma extends FlxSpriteGroup
 		y = (puerta.y * 50) - (vY * 50);
 		velocity.x = vX * maxVelocity.x * 0.4;
 		velocity.y = vY * maxVelocity.x * 0.4;
+	}
+	
+	public function matar() {
+		base.set_alpha(0);
+		acabarFrightMode();
+		decidirAnimacion();
+	}
+	
+	public function revivir() {
+		base.set_alpha(1);
 	}
 	
 	public function getIA():Modulo

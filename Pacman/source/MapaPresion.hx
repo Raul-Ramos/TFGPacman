@@ -124,7 +124,7 @@ class MapaPresion
 								from = FlxObject.LEFT;
 								posX++;
 							} else {
-								vertice.vecinos[i] = -1;
+								vertice.vecinos[i] = -3;
 								vertice.caminoVecinos[i] = camino;
 							}
 						}
@@ -218,7 +218,7 @@ class MapaPresion
 			for (x in 0...pressMap[y].length) {
 				grupo = pressMap[y][x];
 				if (grupo > 0) {
-					pressMap[y][x] = 10 * (1 - (sizeZonas[Std.int(grupo) - 1] / maximo)) + 0.1;
+					pressMap[y][x] = 10 * (1 - (sizeZonas[Std.int(grupo) - 1] / maximo)) + 0.5;
 				}
 			}
 		}
@@ -343,11 +343,41 @@ class MapaPresion
 		var nodosAbiertos:Array<NodoExtension> = new Array<NodoExtension>();
 		var nodosCerrados:Array<NodoExtension> = new Array<NodoExtension>();
 		
+		//Abre los nodos iniciales a partir de los vertices
+		var x, y:Int;
 		for (v in vertices) {
-			nodosAbiertos.push(new NodoExtension(new FlxPoint(v.x, v.y), 0));
+			for (ve in 0...v.vecinos.length) {
+				x = v.x;
+				y = v.y;
+				switch(ve) {
+					case 0:
+						y -= 1;
+						if (y < 0) y = pressMap.length - 1;
+					case 1:
+						y += 1;
+						if (y > pressMap.length - 1) y = 0;
+					case 2:
+						x -= 1;
+						if (x < 0) x = pressMap[0].length - 1;
+					default:
+						x += 1;
+						if (x > pressMap[0].length - 1) x = 0;
+				}
+				
+				//Si son caminos sin salida, penalizacion extra
+				if (v.vecinos[ve] == -3) {
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), (pressMap[v.y][v.x] + 2) * 2));
+				}
+				else if (v.vecinos[ve] != -1) {
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), pressMap[v.y][v.x]));
+				}
+			}
+			
+			pressMap[v.y][v.x] *= 2;
+			nodosCerrados.push(new NodoExtension(new FlxPoint(v.x, v.y), 0));
 		}
 		
-		var x, y, xor, yor, num:Int;
+		var xor, yor, num:Int;
 		var nodo:NodoExtension;
 		
 		while (nodosAbiertos.length > 0) {
@@ -365,26 +395,26 @@ class MapaPresion
 				y = yor + 1;
 				if (y > pressMap.length - 1) y = 0;
 				if (pressMap[y][x] > -1 && !contiene(x, y, nodosAbiertos) && !contiene(x, y, nodosCerrados)) {
-					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1.25));
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 2));
 				}
 				
 				y = yor - 1;
 				if (y < 0) y = pressMap.length - 1;
 				if (pressMap[y][x] > -1 && !contiene(x, y, nodosAbiertos) && !contiene(x, y, nodosCerrados)) {
-					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1.25));
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 2));
 				}
 				
 				x = xor + 1;
 				y = yor;
 				if (x > pressMap[0].length - 1) x = 0;
 				if (pressMap[y][x] > -1 && !contiene(x, y, nodosAbiertos) && !contiene(x, y, nodosCerrados)) {
-					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1.25));
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 2));
 				}
 				
 				x = xor - 1;
 				if (x < 0) x = pressMap[0].length - 1;
 				if (pressMap[y][x] > -1 && !contiene(x, y, nodosAbiertos) && !contiene(x, y, nodosCerrados)) {
-					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1.25));
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 2));
 				}
 				
 				nodosCerrados.push(nodo);
@@ -415,14 +445,13 @@ class MapaPresion
 	//////////Busca los componentes biconectados//////////
 	private function getArticulationPoints(i:Int, time:Int, verticesBC:Array<VerticeBC>, stack:Array<Array<Int>>, zonas:Array<Array<Array<Int>>>) {
 		var u:VerticeBC = verticesBC[i];
-		//trace(u.v.x, u.v.y);
 		u.visited = true;
 		u.st = time + 1;
 		u.low = u.st;
 		var dfsChild:Int = 0;
 		var ni:VerticeBC;
 		for (v in 0...u.v.vecinos.length) {
-			if (u.v.vecinos[v] != -1) {
+			if (u.v.vecinos[v] > -1) {
 				ni = verticesBC[u.v.vecinos[v]];
 				if (!ni.visited) {
 					stack.push(entradaStck(i,u.v.vecinos[v]));

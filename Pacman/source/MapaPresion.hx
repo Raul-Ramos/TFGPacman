@@ -5,6 +5,7 @@ import flixel.util.FlxPoint;
 import flixel.FlxG;
 
 import flixel.util.FlxColor;
+import flixel.text.FlxText;
 using flixel.util.FlxSpriteUtil;
 
 
@@ -211,18 +212,19 @@ class MapaPresion
 		}
 		
 		//////////Asigna presión a los no-vertices en función del tamaño relativo del area//////////
+		//Se pone un extra para diferenciar el área de menor presión de los vértices, que se quedan en 0//
 		var grupo:Float;
 		for (y in 0...pressMap.length) {
 			for (x in 0...pressMap[y].length) {
 				grupo = pressMap[y][x];
 				if (grupo > 0) {
-					pressMap[y][x] = 10 * (1 - (sizeZonas[Std.int(grupo) - 1] / maximo));
+					pressMap[y][x] = 10 * (1 - (sizeZonas[Std.int(grupo) - 1] / maximo)) + 0.1;
 				}
 			}
 		}
 
 		//////////Asigna presión a los vertices en función de las arestas vecinas//////////
-		/*var lados, sumaLados:Float;
+		var lados, sumaLados:Float;
 		
 		for (verti in vertices) {
 			lados = 0;
@@ -262,13 +264,12 @@ class MapaPresion
 			
 		}
 		
-		for (l in pressMap) {
-			trace(l);
-		}*/
 		
 	}
 	
-	public function dibujarMapa(playstate:PlayState, origen:FlxPoint, tamanyoTile:Int) {
+	public function dibujarMapa(playstate:PlayState, origen:FlxPoint, tamanyoTile:Int, text:Bool = false) {
+		
+		//////////Busca maximo y minimo//////////
 		var maximo:Float = -1;
 		var minimo:Float = -1;
 		for ( fila in pressMap) {
@@ -278,21 +279,59 @@ class MapaPresion
 			}
 		}
 		
+		//////////Crea el area de dibujo//////////
 		var canvas:FlxSprite = new FlxSprite(origen.x, origen.y);
 		canvas.makeGraphic(pressMap[0].length * tamanyoTile, pressMap.length * tamanyoTile, FlxColor.TRANSPARENT, true);
+		playstate.add(canvas);
 		
-		var color, G:Int;
+		
+		var color, G, R:Int;
+		var media:Float = (maximo - minimo) / 2;
+		
 		for (fila in 0...pressMap.length) {
 			for (elemento in 0...pressMap[fila].length) {
 				if (pressMap[fila][elemento] > -1) {
-					G = Std.int(255 * (1 - ((pressMap[fila][elemento] - minimo) / maximo - minimo)));
-					color = (255 & 0xFF) << 24 | (255 & 0xFF) << 16 | (G & 0xFF) << 8 | (0 & 0xFF);
+					//Degradado
+					//Si está por encima de la media, va de G 255 -> 0 y R 255 (Amarillo -> Rojo)
+					//Si está por debajo de la media, va de R 0 -> 255 y G 255 (Verde -> Amarillo)
+					if (pressMap[fila][elemento] >= media) {
+						G = Std.int(255 * (1 - (2*((pressMap[fila][elemento] - minimo) / maximo - minimo))));
+						R = 255;
+					} else {
+						G = 255;
+						R = Std.int(255 * (2*((pressMap[fila][elemento] - minimo) / maximo - minimo)));
+					}
+					
+					//Pinta el cuadrado
+					color = (255 & 0xFF) << 24 | (R & 0xFF) << 16 | (G & 0xFF) << 8 | (0 & 0xFF);
 					canvas.drawRect(elemento * tamanyoTile, fila * tamanyoTile, tamanyoTile, tamanyoTile, color);
+					
+					//Añade texto si se ha especificado
+					if(text){
+						var myText:FlxText = new FlxText(elemento * tamanyoTile, fila * tamanyoTile, tamanyoTile);
+						myText.text = Std.string(floatToStringPrecision(pressMap[fila][elemento],3));
+						myText.setFormat(20, FlxColor.GREEN, "center");
+						playstate.add(myText);
+					}
 				}
 			}
 		}
-		playstate.add(canvas);
-		
+	}
+	
+	private function floatToStringPrecision(n:Float, prec:Int){
+	  n = Math.round(n * Math.pow(10, prec));
+	  var str = ''+n;
+	  var len = str.length;
+	  if(len <= prec){
+		while(len < prec){
+		  str = '0'+str;
+		  len++;
+		}
+		return '0.'+str;
+	  }
+	  else{
+		return str.substr(0, str.length-prec) + '.'+str.substr(str.length-prec);
+	  }
 	}
 	
 	private function invertirArray(array:Array<FlxPoint>, vertice:Vertice):Array<FlxPoint> {

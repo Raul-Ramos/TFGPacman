@@ -179,8 +179,9 @@ class PlayState extends FlxState
 		gFantasmas.iniciarFright();
 	}
 	
-	private function pacmanFantasma(pacman:Pacman, fantasma:FlxSprite):Void {
-		trace("algo es algo");
+	private function pacmanFantasma(pacman:Pacman, spriteF:FlxSprite):Void {
+		var fantasma:Fantasma = gFantasmas.identificarFantasma(spriteF);
+		
 	}
 	
 	private function actualizarPuntos(suma:Int):Void {

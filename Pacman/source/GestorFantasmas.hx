@@ -1,5 +1,6 @@
 package ;
 
+import flixel.FlxSprite;
 import Modulo.TipoIA;
 import flixel.util.FlxPoint;
 import flixel.group.FlxTypedGroup;
@@ -80,6 +81,15 @@ class GestorFantasmas extends FlxTypedGroup<Fantasma>
 				}
 			}
 		}
+	}
+	
+	public function identificarFantasma(sprite:FlxSprite):Fantasma {
+		for (f in members) {
+			if (f.members.indexOf(sprite) != -1) {
+				return f;
+			}
+		}
+		return null;
 	}
 	
 	public function empezarCicloSC():Void

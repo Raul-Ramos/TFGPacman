@@ -264,9 +264,12 @@ class MapaPresion
 			
 		}
 		
+		//////////Presión extra por lejanía con los vertices//////////
+		extenderPresion(vertices);
 		
 	}
 	
+	//////////Dibuja el mapa en pantalla para debugging	//////////
 	public function dibujarMapa(playstate:PlayState, origen:FlxPoint, tamanyoTile:Int, text:Bool = false) {
 		
 		//////////Busca maximo y minimo//////////
@@ -295,11 +298,11 @@ class MapaPresion
 					//Si está por encima de la media, va de G 255 -> 0 y R 255 (Amarillo -> Rojo)
 					//Si está por debajo de la media, va de R 0 -> 255 y G 255 (Verde -> Amarillo)
 					if (pressMap[fila][elemento] >= media) {
-						G = Std.int(255 * (1 - (2*((pressMap[fila][elemento] - minimo) / maximo - minimo))));
+						G = Std.int(255 * (1 - ((pressMap[fila][elemento] - minimo) / (maximo - minimo))));
 						R = 255;
 					} else {
 						G = 255;
-						R = Std.int(255 * (2*((pressMap[fila][elemento] - minimo) / maximo - minimo)));
+						R = Std.int(255 * ((pressMap[fila][elemento] - minimo) / (media - minimo)));
 					}
 					
 					//Pinta el cuadrado
@@ -318,6 +321,7 @@ class MapaPresion
 		}
 	}
 	
+	//////////Devuelve el string con unos digitos especificos//////////
 	private function floatToStringPrecision(n:Float, prec:Int){
 	  n = Math.round(n * Math.pow(10, prec));
 	  var str = ''+n;
@@ -334,6 +338,71 @@ class MapaPresion
 	  }
 	}
 	
+	//////////Asigna presión adicional a las casillas en proporcion a la lejanía con un vertice//////////
+	private function extenderPresion(vertices:Array<Vertice>) {
+		var nodosAbiertos:Array<NodoExtension> = new Array<NodoExtension>();
+		var nodosCerrados:Array<NodoExtension> = new Array<NodoExtension>();
+		
+		for (v in vertices) {
+			nodosAbiertos.push(new NodoExtension(new FlxPoint(v.x, v.y), 0));
+		}
+		
+		var x, y, xor, yor, num:Int;
+		var nodo:NodoExtension;
+		while (nodosAbiertos.length > 0) {
+			num = nodosAbiertos.length;
+			for (nodoI in 0...num) {
+				nodo = nodosAbiertos[nodoI];
+				
+				xor = Std.int(nodo.posicion.x);
+				yor = Std.int(nodo.posicion.y);
+				
+				//Se añade el valor acumulado extra
+				pressMap[yor][xor] += nodo.valorAcumulado;
+				
+				x = xor;
+				y = yor + 1;
+				if (y > pressMap.length - 1) y = 0;
+				if (pressMap[y][x] > -1 && !contiene(x, y, nodosAbiertos) && !contiene(x, y, nodosCerrados)) {
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1));
+				}
+				
+				y = yor - 1;
+				if (y < 0) y = pressMap.length - 1;
+				if (pressMap[y][x] > -1 && !contiene(x, y, nodosAbiertos) && !contiene(x, y, nodosCerrados)) {
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1));
+				}
+				
+				x = xor + 1;
+				y = yor;
+				if (x > pressMap[0].length - 1) x = 0;
+				if (pressMap[y][x] > -1 && !contiene(x, y, nodosAbiertos) && !contiene(x, y, nodosCerrados)) {
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1));
+				}
+				
+				x = xor - 1;
+				if (x < 0) x = pressMap[0].length - 1;
+				if (pressMap[y][x] > -1 && !contiene(x, y, nodosAbiertos) && !contiene(x, y, nodosCerrados)) {
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1));
+				}
+				
+				nodosCerrados.push(nodo);
+			}
+			
+			nodosAbiertos.splice(0, num);
+		}
+	}
+	
+	private function contiene(x:Float, y:Float, array:Array<NodoExtension>):Bool {
+		for (n in array) {
+			if (n.posicion.x == x && n.posicion.y == y) {
+				return true;
+			}	
+		}
+		return false;
+	}
+	
+	//////////Duplica, invierte y retorna una array de flxpoint//////////
 	private function invertirArray(array:Array<FlxPoint>, vertice:Vertice):Array<FlxPoint> {
 		var arrayN:Array<FlxPoint> = array.copy();
 		arrayN.pop();
@@ -342,6 +411,7 @@ class MapaPresion
 		return arrayN;
 	}
 	
+	//////////Busca los componentes biconectados//////////
 	private function getArticulationPoints(i:Int, time:Int, verticesBC:Array<VerticeBC>, stack:Array<Array<Int>>, zonas:Array<Array<Array<Int>>>) {
 		var u:VerticeBC = verticesBC[i];
 		//trace(u.v.x, u.v.y);
@@ -373,6 +443,7 @@ class MapaPresion
 		}
 	}
 	
+	//////////Crea un elemento del stack de la búsqueda de componentes biconectados//////////
 	private function entradaStck(u:Int, v:Int):Array<Int> {
 		var nodo:Array<Int> = new Array<Int>();
 		nodo.push(u);
@@ -380,6 +451,7 @@ class MapaPresion
 		return nodo;
 	}
 	
+	//////////Crea una zona nueva con las frontas de los componentes biconectados//////////
 	private function outputComp(stack:Array<Array<Int>>, hasta:Array<Int>, zonas:Array<Array<Array<Int>>>) {
 		var e:Array<Int>;
 		var z:Array<Array<Int>> = new Array<Array<Int>>();
@@ -394,6 +466,7 @@ class MapaPresion
 	
 }
 
+//////////Vertice que contiene los vecinos, los puntos intermedios y la posición//////////
 class Vertice
 {
 	public var vecinos:Array<Int> = new Array<Int>();
@@ -418,6 +491,7 @@ class Vertice
 	}
 }
 
+//////////Vertice que contiene un Vertice regular y datos para la búsqueda de componentes biconectados//////////
 class VerticeBC{
 	public var v:Vertice;
 	public var visited:Bool = false;
@@ -427,5 +501,15 @@ class VerticeBC{
 	
 	public function new(vertice:Vertice) {
 		this.v = vertice;
+	}
+}
+
+class NodoExtension {
+	public var posicion:FlxPoint;
+	public var valorAcumulado:Float;
+	
+	public function new(posicion:FlxPoint, valor:Float) {
+		this.posicion = posicion;
+		this.valorAcumulado = valor;
 	}
 }

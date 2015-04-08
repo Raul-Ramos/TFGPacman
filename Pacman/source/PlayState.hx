@@ -98,6 +98,7 @@ class PlayState extends FlxState
 		}
 		
 		var mapaPresion:MapaPresion = new MapaPresion(valorParedes);
+		mapaPresion.dibujarMapa(this, new FlxPoint(0,0), 50);
 		/*
 		
 		//Gestor de valores

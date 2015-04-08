@@ -1,6 +1,12 @@
 package  ;
 import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.util.FlxPoint;
+import flixel.FlxG;
+
+import flixel.util.FlxColor;
+using flixel.util.FlxSpriteUtil;
+
 
 /**
  * ...
@@ -59,7 +65,7 @@ class MapaPresion
 		var posX, posY, from, found:Int;
 		var camino:Array<FlxPoint>;
 		
-		//////////Busca conexiones entre vectores para crear grafo//////////
+		//////////Busca conexiones entre vertices para crear grafo//////////
 		for (v in 0...vertices.length) {
 			var vertice:Vertice = vertices[v];
 			for (i in 0...vertice.vecinos.length) {
@@ -204,7 +210,7 @@ class MapaPresion
 			}
 		}
 		
-		//////////Asigna presión en función del tamaño relativo del area//////////
+		//////////Asigna presión a los no-vertices en función del tamaño relativo del area//////////
 		var grupo:Float;
 		for (y in 0...pressMap.length) {
 			for (x in 0...pressMap[y].length) {
@@ -214,8 +220,78 @@ class MapaPresion
 				}
 			}
 		}
+
+		//////////Asigna presión a los vertices en función de las arestas vecinas//////////
+		/*var lados, sumaLados:Float;
 		
-		trace(pressMap);
+		for (verti in vertices) {
+			lados = 0;
+			sumaLados = 0;
+			posX = verti.x;
+			
+			posY = verti.y + 1;
+			if (posY > mapa.length - 1) posY = 0;
+			if (pressMap[posY][posX] > 0) {
+				lados++;
+				sumaLados += pressMap[posY][posX];
+			}
+			
+			posY = verti.y - 1;
+			if (posY < 0 ) posY = mapa.length - 1;
+			if (pressMap[posY][posX] > 0) {
+				lados++;
+				sumaLados += pressMap[posY][posX];
+			}
+			
+			posY = verti.y;
+			posX = verti.x + 1;
+			if (posX > mapa[0].length - 1) posX = 0;
+			if (pressMap[posY][posX] > 0) {
+				lados++;
+				sumaLados += pressMap[posY][posX];
+			}
+			
+			posX = verti.x - 1;
+			if (posX < 0 ) posX = mapa[0].length - 1;
+			if (pressMap[posY][posX] > 0) {
+				lados++;
+				sumaLados += pressMap[posY][posX];
+			}
+			
+			pressMap[verti.y][verti.x] = (sumaLados / lados);
+			
+		}
+		
+		for (l in pressMap) {
+			trace(l);
+		}*/
+		
+	}
+	
+	public function dibujarMapa(playstate:PlayState, origen:FlxPoint, tamanyoTile:Int) {
+		var maximo:Float = -1;
+		var minimo:Float = -1;
+		for ( fila in pressMap) {
+			for (elemento in fila) {
+				if (elemento > maximo) maximo = elemento;
+				if (elemento > -1 && (minimo == -1 || elemento < minimo )) minimo = elemento;
+			}
+		}
+		
+		var canvas:FlxSprite = new FlxSprite(origen.x, origen.y);
+		canvas.makeGraphic(pressMap[0].length * tamanyoTile, pressMap.length * tamanyoTile, FlxColor.TRANSPARENT, true);
+		
+		var color, G:Int;
+		for (fila in 0...pressMap.length) {
+			for (elemento in 0...pressMap[fila].length) {
+				if (pressMap[fila][elemento] > -1) {
+					G = Std.int(255 * (1 - ((pressMap[fila][elemento] - minimo) / maximo - minimo)));
+					color = (255 & 0xFF) << 24 | (255 & 0xFF) << 16 | (G & 0xFF) << 8 | (0 & 0xFF);
+					canvas.drawRect(elemento * tamanyoTile, fila * tamanyoTile, tamanyoTile, tamanyoTile, color);
+				}
+			}
+		}
+		playstate.add(canvas);
 		
 	}
 	

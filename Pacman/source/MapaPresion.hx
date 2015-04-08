@@ -218,7 +218,7 @@ class MapaPresion
 			for (x in 0...pressMap[y].length) {
 				grupo = pressMap[y][x];
 				if (grupo > 0) {
-					pressMap[y][x] = 10 * (1 - (sizeZonas[Std.int(grupo) - 1] / maximo)) + 0.5;
+					pressMap[y][x] = 10 * (1 - (sizeZonas[Std.int(grupo) - 1] / maximo)) + 1;
 				}
 			}
 		}
@@ -373,7 +373,7 @@ class MapaPresion
 				}
 			}
 			
-			pressMap[v.y][v.x] *= 2;
+			pressMap[v.y][v.x] *= 1.5;
 			nodosCerrados.push(new NodoExtension(new FlxPoint(v.x, v.y), 0));
 		}
 		

@@ -298,7 +298,7 @@ class MapaPresion
 					//Si está por encima de la media, va de G 255 -> 0 y R 255 (Amarillo -> Rojo)
 					//Si está por debajo de la media, va de R 0 -> 255 y G 255 (Verde -> Amarillo)
 					if (pressMap[fila][elemento] >= media) {
-						G = Std.int(255 * (1 - ((pressMap[fila][elemento] - minimo) / (maximo - minimo))));
+						G = Std.int(255 * (1 - ((pressMap[fila][elemento] - media) / (maximo - media))));
 						R = 255;
 					} else {
 						G = 255;
@@ -349,6 +349,7 @@ class MapaPresion
 		
 		var x, y, xor, yor, num:Int;
 		var nodo:NodoExtension;
+		
 		while (nodosAbiertos.length > 0) {
 			num = nodosAbiertos.length;
 			for (nodoI in 0...num) {
@@ -364,26 +365,26 @@ class MapaPresion
 				y = yor + 1;
 				if (y > pressMap.length - 1) y = 0;
 				if (pressMap[y][x] > -1 && !contiene(x, y, nodosAbiertos) && !contiene(x, y, nodosCerrados)) {
-					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1));
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1.25));
 				}
 				
 				y = yor - 1;
 				if (y < 0) y = pressMap.length - 1;
 				if (pressMap[y][x] > -1 && !contiene(x, y, nodosAbiertos) && !contiene(x, y, nodosCerrados)) {
-					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1));
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1.25));
 				}
 				
 				x = xor + 1;
 				y = yor;
 				if (x > pressMap[0].length - 1) x = 0;
 				if (pressMap[y][x] > -1 && !contiene(x, y, nodosAbiertos) && !contiene(x, y, nodosCerrados)) {
-					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1));
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1.25));
 				}
 				
 				x = xor - 1;
 				if (x < 0) x = pressMap[0].length - 1;
 				if (pressMap[y][x] > -1 && !contiene(x, y, nodosAbiertos) && !contiene(x, y, nodosCerrados)) {
-					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1));
+					nodosAbiertos.push(new NodoExtension(new FlxPoint(x, y), nodo.valorAcumulado + 1.25));
 				}
 				
 				nodosCerrados.push(nodo);

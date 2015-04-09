@@ -6,31 +6,25 @@
     <movie input="" />
     <movie path="Project.xml" />
     <movie fps="60" />
-    <movie width="630" />
-    <movie height="720" />
+    <movie width="640" />
+    <movie height="480" />
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="000000" />
+    <movie background="#FFFFFF" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="C:\HaxeToolkit\haxe\lib\flixel-addons\1,1,0" />
-    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,2,1" />
-    <class path="C:\HaxeToolkit\haxe\lib\flixel\3,3,8" />
-    <class path="C:\HaxeToolkit\haxe\lib\lime\2,0,4" />
-    <class path="source" />
-    <class path="C:\HaxeToolkit\haxe\lib\lime\2,0,4\legacy" />
-    <class path="D:\Pacman-Export\flash\haxe" />
+    <class path="." />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="flixel-addons=1.1.0&#xA;openfl=2.2.1&#xA;flixel=3.3.8&#xA;lime=2.0.4&#xA;tools=2.0.4&#xA;lime-legacy&#xA;FLX_NO_DEBUG&#xA;no-compilation&#xA;NAPE_RELEASE_BUILD&#xA;openfl-flash&#xA;FLX_RENDER_BLIT&#xA;web" />
+    <option directives="" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
-    <option mainClass="ApplicationMain" />
-    <option enabledebug="True" />
-    <option additional="-swf-version 11.8" />
+    <option mainClass="Test" />
+    <option enabledebug="False" />
+    <option additional="" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

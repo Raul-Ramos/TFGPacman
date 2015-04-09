@@ -9,6 +9,7 @@ import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.group.FlxTypedGroup;
+import MapaPresion;
 
 import flixel.util.FlxColor;
 
@@ -44,7 +45,7 @@ class PlayState extends FlxState
 		super.create();
 		
 		//Lectura del mapa
-		_map = new CustomOgmoLoader(AssetPaths.n1__oel);
+		_map = new CustomOgmoLoader(AssetPaths.n2__oel);
 		
 		_mWalls = _map.loadTilemap(AssetPaths.tileset__png, 50, 50, "paredes");
 		_mWalls.loadMap(_mWalls.getData(), AssetPaths.tileset__png, 50, 50, FlxTilemap.AUTO);
@@ -69,7 +70,7 @@ class PlayState extends FlxState
 			}
 			valorParedes[f] = fila;
 		}
-		
+
 		//Creación de zonas
 		dots = new FlxTypedGroup<Dot>();
 		var zonas:Array<Int> = _map.getIntArrayValues("zonas");
@@ -95,6 +96,10 @@ class PlayState extends FlxState
 					valorParedes[y][x] = -1;
 			}
 		}
+		
+		var mapaPresion:MapaPresion = new MapaPresion(valorParedes);
+		mapaPresion.dibujarMapa(this, new FlxPoint(0,0), 50, true);
+		/*
 		
 		//Gestor de valores
 		var gestorValores:GestorValoresJuego = new GestorValoresJuego();
@@ -130,6 +135,7 @@ class PlayState extends FlxState
 		add(scoreTxt);
 		
 		gFantasmas.empezarCicloSC();
+		*/
 	}
 	
 	/**
@@ -147,11 +153,12 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-		
+		/*
 		FlxG.collide(pacman, _mWalls);
 		FlxG.overlap(pacman, dots, comerPunto);
 		FlxG.overlap(pacman, powerPellets, comerPowerPellet);
 		FlxG.overlap(pacman, gFantasmas, pacmanFantasma);
+		*/
 	}
 	
 	private function placeEntities(entityName:String, entityData:Xml):Void

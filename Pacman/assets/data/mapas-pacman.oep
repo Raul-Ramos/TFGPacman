@@ -9,12 +9,12 @@
     <Height>1100</Height>
   </LevelDefaultSize>
   <LevelMinimumSize>
-    <Width>1050</Width>
-    <Height>1100</Height>
+    <Width>150</Width>
+    <Height>110</Height>
   </LevelMinimumSize>
   <LevelMaximumSize>
-    <Width>1050</Width>
-    <Height>1100</Height>
+    <Width>2100</Width>
+    <Height>2200</Height>
   </LevelMaximumSize>
   <Filename>C:\Users\Usuario\Documents\HaxeFlixel\Pacman\Pacman\assets\data\mapas-pacman.oep</Filename>
   <AngleMode>Degrees</AngleMode>

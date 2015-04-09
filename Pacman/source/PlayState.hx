@@ -45,7 +45,7 @@ class PlayState extends FlxState
 		super.create();
 		
 		//Lectura del mapa
-		_map = new CustomOgmoLoader(AssetPaths.n2__oel);
+		_map = new CustomOgmoLoader(AssetPaths.n1__oel);
 		
 		_mWalls = _map.loadTilemap(AssetPaths.tileset__png, 50, 50, "paredes");
 		_mWalls.loadMap(_mWalls.getData(), AssetPaths.tileset__png, 50, 50, FlxTilemap.AUTO);

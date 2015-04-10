@@ -186,10 +186,3 @@ class Modulo
 		return this.salidaCasa != null;
 	}
 }
-
-enum TipoIA {
-	Blinky;
-	Pinky;
-	Inky;
-	Clyde;
-}

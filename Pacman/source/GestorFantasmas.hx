@@ -1,7 +1,6 @@
 package ;
 
 import flixel.FlxSprite;
-import Modulo.TipoIA;
 import flixel.util.FlxPoint;
 import flixel.group.FlxTypedGroup;
 
@@ -119,7 +118,6 @@ class GestorFantasmas extends FlxTypedGroup<Fantasma>
 		switch(tipo) {
 			case TipoIA.Blinky: modulo = new ModuloBlinky(mapa, pacman, gestorValores, dots);
 			case TipoIA.Pinky: modulo = new ModuloPinky(mapa, pacman);
-			case TipoIA.Clyde: modulo = new ModuloClyde(mapa, pacman);
 			case TipoIA.Inky:
 				if (blinkyPerseguible != null) {
 					modulo = new ModuloInky(mapa, pacman, blinkyPerseguible);
@@ -127,6 +125,8 @@ class GestorFantasmas extends FlxTypedGroup<Fantasma>
 					trace("ERROR: Creación de Inky - "
 						+ "No hay ningun blinky disponible para seguir");
 				}
+			case TipoIA.Clyde: modulo = new ModuloClyde(mapa, pacman);
+			case TipoIA.Kiry: modulo = new ModuloKiry(mapa, pacman);
 		}
 		
 		if (modulo == null) {
@@ -243,4 +243,12 @@ class GestorFantasmas extends FlxTypedGroup<Fantasma>
 		
 		return puntos;
 	}
+}
+
+enum TipoIA {
+	Blinky;
+	Pinky;
+	Inky;
+	Clyde;
+	Kiry;
 }

@@ -71,7 +71,7 @@ class Pathfinding
 		return mejorOpcion;
 	}
 	
-	static public function astar(inicio:FlxPoint, final:FlxPoint, mapa:Array<Array<Int>>):String
+	static public function astar(inicio:FlxPoint, final:FlxPoint, mapa:Array<Array<Int>>):Int
 	{
 		var abiertos:Array<Nodo> = new Array<Nodo>();
 		var cerrados:Array<Nodo> = new Array<Nodo>();
@@ -112,7 +112,7 @@ class Pathfinding
 			
 			//Si es la solucion
 			if (nodoT.x == finalX && nodoT.y == finalY) {
-				return devolverCamino(nodoT);
+				return devolverCamino(nodoT, nodoInicial);
 			}
 			
 			abiertos.remove(nodoT);
@@ -138,7 +138,7 @@ class Pathfinding
 					//Especial de Pacman
 					//Si la pared es el objetivo, esta es la solución
 					if (x == finalX && y == finalY) {
-						return devolverCamino(nodoT);
+						return devolverCamino(nodoT, nodoInicial);
 					} else {
 						continue;
 					}
@@ -165,7 +165,6 @@ class Pathfinding
 					if (i.x == x && i.y == y) {
 						if (i.costeH > nodoT.coste + 1 + eucli) {
 							nodoA = i;
-							trace("subs");
 						} else {
 							found = true;
 						}
@@ -191,17 +190,32 @@ class Pathfinding
 				}
 			}
 		}
-		return null;
+		return FlxObject.NONE;
 	}
 	
-	static private function devolverCamino(nodoF:Nodo):String {
+	static private function devolverCamino(nodoF:Nodo, nodoInicial:Nodo):Int {
 		var nodoP:Nodo = nodoF;
-		var f:String = "";
-		while (nodoP != null) {
-			f = nodoP.x + "," + nodoP.y + "->" + f;
-			nodoP = nodoP.padre;
+		var resultado:Int;
+		
+		if(nodoF != nodoInicial){
+			while (nodoP.padre != nodoInicial) {
+				nodoP = nodoP.padre;
+			}
+			
+			if (nodoInicial.x < nodoP.x) {
+				resultado = FlxObject.RIGHT;
+			} else if ( nodoInicial.x > nodoP.x) {
+				resultado = FlxObject.LEFT;
+			} else if (nodoInicial.y < nodoP.y) {
+				resultado = FlxObject.DOWN;
+			} else {
+				resultado = FlxObject.UP;
+			}
+		} else {
+			resultado = FlxObject.ANY;
 		}
-		return f;
+
+		return resultado;
 	}
 }
 

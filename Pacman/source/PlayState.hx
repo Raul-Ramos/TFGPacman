@@ -12,11 +12,11 @@ import flixel.group.FlxTypedGroup;
 import MapaPresion;
 
 import flixel.util.FlxColor;
+import GestorFantasmas.TipoIA;
 
 import flixel.tile.FlxTilemap;
 import flixel.FlxObject;
 
-import Modulo.TipoIA;
 import Pathfinding;
 
 /**
@@ -97,9 +97,8 @@ class PlayState extends FlxState
 			}
 		}
 		
-		var mapaPresion:MapaPresion = new MapaPresion(valorParedes);
-		mapaPresion.dibujarMapa(this, new FlxPoint(0,0), 50, true);
-		/*
+		//var mapaPresion:MapaPresion = new MapaPresion(valorParedes);
+		//mapaPresion.dibujarMapa(this, new FlxPoint(0,0), 50, true);
 		
 		//Gestor de valores
 		var gestorValores:GestorValoresJuego = new GestorValoresJuego();
@@ -116,10 +115,10 @@ class PlayState extends FlxState
 		//Gestor de fantasmas
 		gFantasmas = new GestorFantasmas(valorParedes, gestorValores, dots, pacman);
 		add(gFantasmas);
-		gFantasmas.nuevoFantasma(Modulo.TipoIA.Blinky);
-		gFantasmas.nuevoFantasma(Modulo.TipoIA.Pinky);
-		gFantasmas.nuevoFantasma(Modulo.TipoIA.Inky);
-		gFantasmas.nuevoFantasma(Modulo.TipoIA.Clyde);
+		gFantasmas.nuevoFantasma(TipoIA.Kiry);
+		gFantasmas.nuevoFantasma(TipoIA.Pinky);
+		gFantasmas.nuevoFantasma(TipoIA.Inky);
+		gFantasmas.nuevoFantasma(TipoIA.Clyde);
 		
 		//Interfaz
 		FlxG.camera.setBounds(0, -50, 1050, 1200, true);
@@ -135,7 +134,6 @@ class PlayState extends FlxState
 		add(scoreTxt);
 		
 		gFantasmas.empezarCicloSC();
-		*/
 	}
 	
 	/**
@@ -153,12 +151,10 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-		/*
 		FlxG.collide(pacman, _mWalls);
 		FlxG.overlap(pacman, dots, comerPunto);
 		FlxG.overlap(pacman, powerPellets, comerPowerPellet);
 		FlxG.overlap(pacman, gFantasmas, pacmanFantasma);
-		*/
 	}
 	
 	private function placeEntities(entityName:String, entityData:Xml):Void
@@ -191,7 +187,7 @@ class PlayState extends FlxState
 		if (fantasma.getIA().isFrightened()) {
 			actualizarPuntos(gFantasmas.matar(fantasma));
 		} else if (!fantasma.getIA().isDead()) {
-			trace("te moriiste");
+			//trace("te moriiste");
 		}
 	}
 	

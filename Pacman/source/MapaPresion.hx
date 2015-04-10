@@ -266,7 +266,11 @@ class MapaPresion
 		
 		//////////Presión extra por lejanía con los vertices//////////
 		extenderPresion(vertices);
-		
+	}
+	
+	public function getMapa():Array<Array<Float>>
+	{
+		return pressMap;
 	}
 	
 	//////////Dibuja el mapa en pantalla para debugging	//////////

@@ -5,8 +5,6 @@ import flixel.FlxObject;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxPoint;
 
-import Modulo.TipoIA;
-
 /**
  * ...
  * @author Goldy
@@ -89,28 +87,8 @@ class Fantasma extends FlxSpriteGroup
 				facing = ia.movimientoRegular();
 				
 				decidirAnimacion();
+				girar();
 				
-				switch(facing) {
-					case FlxObject.UP:
-						velocity.x = 0;
-						velocity.y = -currentVelocity;
-						ojos.animation.frameIndex = 3;
-					case FlxObject.RIGHT:
-						velocity.x = currentVelocity;
-						velocity.y = 0;
-						ojos.animation.frameIndex = 0;
-					case FlxObject.DOWN:
-						velocity.x = 0;
-						velocity.y = currentVelocity;
-						ojos.animation.frameIndex = 1;
-					case FlxObject.LEFT:
-						velocity.x = -currentVelocity;
-						velocity.y = 0;
-						ojos.animation.frameIndex = 2;
-					default:
-						velocity.x = velocity.y = 0;
-				}
-					
 				//Se indica que el paso ha sido tomado
 				pasoDecidido = true;
 			}
@@ -118,6 +96,29 @@ class Fantasma extends FlxSpriteGroup
 			//Permite decidir el paso
 			pasoDecidido = false;
 		}
+	}
+	
+	private function girar():Void {
+		switch(facing) {
+			case FlxObject.UP:
+				velocity.x = 0;
+				velocity.y = -currentVelocity;
+				ojos.animation.frameIndex = 3;
+			case FlxObject.RIGHT:
+				velocity.x = currentVelocity;
+				velocity.y = 0;
+				ojos.animation.frameIndex = 0;
+			case FlxObject.DOWN:
+				velocity.x = 0;
+				velocity.y = currentVelocity;
+				ojos.animation.frameIndex = 1;
+			case FlxObject.LEFT:
+				velocity.x = -currentVelocity;
+				velocity.y = 0;
+				ojos.animation.frameIndex = 2;
+			default:
+				velocity.x = velocity.y = 0;
+		}	
 	}
 	
 	private function decidirAnimacion():Void
@@ -142,6 +143,18 @@ class Fantasma extends FlxSpriteGroup
 		if (currentVelocity > maxVelocity.x) {
 			currentVelocity = maxVelocity.x;
 		}
+		
+		switch(facing) {
+			case FlxObject.UP:
+				facing = FlxObject.DOWN;
+			case FlxObject.DOWN:
+				facing = FlxObject.UP;
+			case FlxObject.RIGHT:
+				facing = FlxObject.LEFT;
+			case FlxObject.LEFT:
+				facing = FlxObject.RIGHT;
+		}
+		girar();
 		
 		ia.setFrightened(true);
 		ojos.alpha = 0;

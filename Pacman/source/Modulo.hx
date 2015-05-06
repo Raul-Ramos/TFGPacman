@@ -167,6 +167,11 @@ class Modulo
 		return null;
 	}
 	
+	public function getNombre():String
+	{
+		return "NONE";
+	}
+	
 	public function getMapa():Array<Array<Int>>
 	{
 		return mapa;

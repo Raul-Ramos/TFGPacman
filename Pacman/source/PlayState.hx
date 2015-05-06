@@ -24,6 +24,11 @@ import Pathfinding;
  */
 class PlayState extends FlxState
 {
+	private var endgame:Bool;
+	
+	private var gFantasmas:GestorFantasmas;
+	private var gInforme:GestorInforme;
+	
 	private var _map:CustomOgmoLoader;
 	private var _mWalls:FlxTilemap;
 	
@@ -31,9 +36,8 @@ class PlayState extends FlxState
 	//TODO: Solo una lista
 	private var dots:FlxTypedGroup<Dot>;
 	private var powerPellets:FlxTypedGroup<PowerPellet>;
-	private var gFantasmas:GestorFantasmas;
 	
-	
+	//Interfaz
 	private var scoreTxt:FlxText;
 	private var score:Int = 0;
 	
@@ -44,8 +48,12 @@ class PlayState extends FlxState
 	{
 		super.create();
 		
+		var tiposFantasma:Array<TipoIA> = [TipoIA.Blinky, TipoIA.Pinky, TipoIA.Inky, TipoIA.Clyde];
+		endgame = false;
+		
 		//Lectura del mapa
 		_map = new CustomOgmoLoader(AssetPaths.n1__oel);
+		var nombreNivel:String = "Nivel 1";
 		
 		_mWalls = _map.loadTilemap(AssetPaths.tileset__png, 50, 50, "paredes");
 		_mWalls.loadMap(_mWalls.getData(), AssetPaths.tileset__png, 50, 50, FlxTilemap.AUTO);
@@ -114,11 +122,10 @@ class PlayState extends FlxState
 
 		//Gestor de fantasmas
 		gFantasmas = new GestorFantasmas(valorParedes, gestorValores, dots, pacman);
+		for (nuevoFantasma in tiposFantasma) {
+			gFantasmas.nuevoFantasma(nuevoFantasma);
+		}
 		add(gFantasmas);
-		gFantasmas.nuevoFantasma(TipoIA.Kiry);
-		gFantasmas.nuevoFantasma(TipoIA.Pinky);
-		gFantasmas.nuevoFantasma(TipoIA.Inky);
-		gFantasmas.nuevoFantasma(TipoIA.Clyde);
 		
 		//Interfaz
 		FlxG.camera.setBounds(0, -50, 1050, 1200, true);
@@ -132,6 +139,13 @@ class PlayState extends FlxState
 		scoreTxt.text = Std.string(score);
 		scoreTxt.setFormat(20, FlxColor.WHITE, "right");
 		add(scoreTxt);
+		
+		//GestorInforme
+		var nombresFant:Array<String> = new Array<String>();
+		for (i in gFantasmas.members) {
+			nombresFant.push(i.getIA().getNombre());
+		}
+		gInforme = new GestorInforme(nombreNivel,nombresFant);
 		
 		gFantasmas.empezarCicloSC();
 	}
@@ -151,10 +165,12 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-		FlxG.collide(pacman, _mWalls);
-		FlxG.overlap(pacman, dots, comerPunto);
-		FlxG.overlap(pacman, powerPellets, comerPowerPellet);
-		FlxG.overlap(pacman, gFantasmas, pacmanFantasma);
+		if (!endgame) {
+			FlxG.collide(pacman, _mWalls);
+			FlxG.overlap(pacman, dots, comerPunto);
+			FlxG.overlap(pacman, powerPellets, comerPowerPellet);
+			FlxG.overlap(pacman, gFantasmas, pacmanFantasma);
+		}
 	}
 	
 	private function placeEntities(entityName:String, entityData:Xml):Void
@@ -183,11 +199,15 @@ class PlayState extends FlxState
 	}
 	
 	private function pacmanFantasma(pacman:Pacman, spriteF:FlxSprite):Void {
-		var fantasma:Fantasma = gFantasmas.identificarFantasma(spriteF);
-		if (fantasma.getIA().isFrightened()) {
-			actualizarPuntos(gFantasmas.matar(fantasma));
-		} else if (!fantasma.getIA().isDead()) {
-			//trace("te moriiste");
+		if(!endgame){
+			var fantasma:Fantasma = gFantasmas.identificarFantasma(spriteF);
+			if (fantasma.getIA().isFrightened()) {
+				actualizarPuntos(gFantasmas.matar(fantasma));
+			} else if (!fantasma.getIA().isDead()) {
+				endgame = true;
+				trace("te moriiste");
+				gInforme.muerte(fantasma.getIA().getNombre(), dots.countDead(), powerPellets.countDead(), score);
+			}
 		}
 	}
 	

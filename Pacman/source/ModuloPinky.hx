@@ -21,6 +21,11 @@ class ModuloPinky extends Modulo
 		return "0xffff9cce";
 	}
 	
+	override public function getNombre():String
+	{
+		return "Pinky";
+	}
+	
 	override private function decidirCamino(facing:Int):Int {
 		
 		//TODO: Evitarse el 50

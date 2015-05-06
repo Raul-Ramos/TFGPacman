@@ -23,6 +23,11 @@ class ModuloInky extends Modulo
 		return "0xff31ffff";
 	}
 	
+	override public function getNombre():String
+	{
+		return "Inky";
+	}
+	
 	override private function decidirCamino(facing:Int):Int {
 		
 		//TODO: Evitarse el 50

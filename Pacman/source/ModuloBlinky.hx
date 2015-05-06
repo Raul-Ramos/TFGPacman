@@ -40,6 +40,11 @@ class ModuloBlinky extends Modulo
 		puntosElroy2 = Std.int(puntosElroy1 / 2);
 	}
 	
+	override public function getNombre():String
+	{
+		return "Blinky";
+	}
+	
 	private function elroy():Void {
 		if (estadoElroy < 2) {
 			if (estadoElroy < 1) {

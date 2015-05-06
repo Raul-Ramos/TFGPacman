@@ -26,6 +26,11 @@ class ModuloKiry extends Modulo
 		return "0xff9142ad";
 	}
 	
+	override public function getNombre():String
+	{
+		return "Kiry";
+	}
+	
 	override private function decidirCamino(facing:Int):Int {
 		
 		var xpacman:Int = Math.floor(pacman.getMidpoint().x / 50);

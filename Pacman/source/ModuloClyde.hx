@@ -20,6 +20,11 @@ class ModuloClyde extends Modulo
 		return "0xffffce31";
 	}
 	
+	override public function getNombre():String
+	{
+		return "Clyde";
+	}
+	
 	override private function decidirCamino(facing:Int):Int {
 		var xObjetivo:Int = Math.floor(pacman.getMidpoint().x / 50);
 		var yObjetivo:Int = Math.floor(pacman.getMidpoint().y / 50);

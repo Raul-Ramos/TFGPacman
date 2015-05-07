@@ -155,7 +155,7 @@ class Pathfinding
 				//Salida X
 				if (x < 0) {
 					x = mapa[0].length - 1;
-				} else if (y >= mapa[0].length) {
+				} else if (x >= mapa[0].length) {
 					x = 0;
 				}
 				

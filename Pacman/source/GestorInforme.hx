@@ -35,6 +35,15 @@ class GestorInforme
 		puntero.addChild(Xml.createPCData(nombreJugador));
 		root.addChild(puntero);
 		
+		puntero = Xml.createElement('date');
+		var fecha:Date = Date.now();
+		puntero.addChild(Xml.createPCData(fecha.toString()));
+		root.addChild(puntero);
+		
+		puntero = Xml.createElement('version');
+		puntero.addChild(Xml.createPCData(getVersion()));
+		root.addChild(puntero);
+		
 		var tagFantasmas:Xml = Xml.createElement('ghosts');
 		for (fantasma in nombresFant) {
 			puntero = Xml.createElement('ghost');
@@ -103,6 +112,18 @@ class GestorInforme
 		saveFile();
 		#end
 	}
+	
+	private function getVersion() {
+		var version:String = "Unknown";
+		#if windows
+		version = 'windows';
+		#end
+		#if flash
+		version = 'flash';
+		#end
+		return version;
+	}
+	
 	
 	#if flash
 	private function saveFile()

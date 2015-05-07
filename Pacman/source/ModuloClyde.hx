@@ -12,17 +12,9 @@ class ModuloClyde extends Modulo
 	
 	public function new(mapa:Array<Array<Int>>, pacman:Pacman) {
 		super(mapa);
+		
+		this.tipoIA = TipoIA.Clyde;
 		this.pacman = pacman;
-	}
-	
-	override public function getColor():String
-	{
-		return "0xffffce31";
-	}
-	
-	override public function getNombre():String
-	{
-		return "Clyde";
 	}
 	
 	override private function decidirCamino(facing:Int):Int {

@@ -5,6 +5,7 @@ import flixel.util.FlxPoint;
 import flixel.group.FlxTypedGroup;
 
 import flixel.FlxG;
+import TipoIA;
 
 /**
  * ...
@@ -243,12 +244,4 @@ class GestorFantasmas extends FlxTypedGroup<Fantasma>
 		
 		return puntos;
 	}
-}
-
-enum TipoIA {
-	Blinky;
-	Pinky;
-	Inky;
-	Clyde;
-	Kiry;
 }

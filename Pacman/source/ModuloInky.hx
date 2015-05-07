@@ -14,18 +14,9 @@ class ModuloInky extends Modulo
 	
 	public function new(mapa:Array<Array<Int>>, pacman:Pacman, blinky:Fantasma) {
 		super(mapa);
+		this.tipoIA = TipoIA.Inky;
 		this.pacman = pacman;
 		this.blinky = blinky;
-	}
-	
-	override public function getColor():String
-	{
-		return "0xff31ffff";
-	}
-	
-	override public function getNombre():String
-	{
-		return "Inky";
 	}
 	
 	override private function decidirCamino(facing:Int):Int {

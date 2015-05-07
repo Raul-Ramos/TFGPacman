@@ -15,20 +15,11 @@ class ModuloKiry extends Modulo
 	
 	public function new(mapa:Array<Array<Int>>, pacman:Pacman) {
 		super(mapa);
+		this.tipoIA = TipoIA.Kiry;
 		this.pacman = pacman;
 		
 		var mapaPresion:MapaPresion = new MapaPresion(mapa);
 		this.pressMap = mapaPresion.getMapa();
-	}
-	
-	override public function getColor():String
-	{
-		return "0xff9142ad";
-	}
-	
-	override public function getNombre():String
-	{
-		return "Kiry";
 	}
 	
 	override private function decidirCamino(facing:Int):Int {

@@ -13,17 +13,8 @@ class ModuloPinky extends Modulo
 
 	public function new(mapa:Array<Array<Int>>, pacman:Pacman) {
 		super(mapa);
+		this.tipoIA = TipoIA.Pinky;
 		this.pacman = pacman;
-	}
-	
-	override public function getColor():String
-	{
-		return "0xffff9cce";
-	}
-	
-	override public function getNombre():String
-	{
-		return "Pinky";
 	}
 	
 	override private function decidirCamino(facing:Int):Int {

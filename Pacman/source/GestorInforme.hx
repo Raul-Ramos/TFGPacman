@@ -1,7 +1,7 @@
 
 package ;
 
-import GestorFantasmas.TipoIA;
+import TipoIA;
 #if !flash
 import sys.io.File;
 import sys.FileSystem;
@@ -23,12 +23,16 @@ class GestorInforme
 	var root:Xml;
 	var tInicio:Int;
 
-	public function new(nombreNivel:String,nombresFant:Array<String>) 
+	public function new(nombreNivel:String,nombreJugador:String,nombresFant:Array<String>) 
 	{
 		root = Xml.createElement('game');
 		
 		var puntero:Xml = Xml.createElement('map');
 		puntero.addChild(Xml.createPCData(nombreNivel));
+		root.addChild(puntero);
+		
+		puntero = Xml.createElement('player');
+		puntero.addChild(Xml.createPCData(nombreJugador));
 		root.addChild(puntero);
 		
 		var tagFantasmas:Xml = Xml.createElement('ghosts');

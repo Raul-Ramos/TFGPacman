@@ -12,7 +12,7 @@ import flixel.group.FlxTypedGroup;
 import MapaPresion;
 
 import flixel.util.FlxColor;
-import GestorFantasmas.TipoIA;
+import TipoIA;
 
 import flixel.tile.FlxTilemap;
 import flixel.FlxObject;
@@ -53,7 +53,6 @@ class PlayState extends FlxState
 		
 		//Lectura del mapa
 		_map = new CustomOgmoLoader(AssetPaths.n1__oel);
-		var nombreNivel:String = "Nivel 1";
 		
 		_mWalls = _map.loadTilemap(AssetPaths.tileset__png, 50, 50, "paredes");
 		_mWalls.loadMap(_mWalls.getData(), AssetPaths.tileset__png, 50, 50, FlxTilemap.AUTO);
@@ -141,11 +140,13 @@ class PlayState extends FlxState
 		add(scoreTxt);
 		
 		//GestorInforme
+		var nombreNivel:String = "Nivel 1";
+		var nombreJugador:String = "Nombre";
 		var nombresFant:Array<String> = new Array<String>();
 		for (i in gFantasmas.members) {
 			nombresFant.push(i.getIA().getNombre());
 		}
-		gInforme = new GestorInforme(nombreNivel,nombresFant);
+		gInforme = new GestorInforme(nombreNivel,nombreJugador,nombresFant);
 		
 		gFantasmas.empezarCicloSC();
 	}

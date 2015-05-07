@@ -1,6 +1,8 @@
 package ;
+import dataghost.GhostData;
 import flixel.FlxObject;
 import flixel.util.FlxPoint;
+import TipoIA;
 
 /**
  * ...
@@ -17,6 +19,8 @@ class Modulo
 	
 	private var frightened:Bool = false;
 	private var scatter:Bool = false;
+	
+	private var tipoIA:TipoIA = null;
 	
 	public function new(mapa:Array<Array<Int>>) 
 	{
@@ -164,12 +168,12 @@ class Modulo
 	
 	public function getColor():String 
 	{
-		return null;
+		return GhostData.getColor(tipoIA);
 	}
 	
 	public function getNombre():String
 	{
-		return "NONE";
+		return GhostData.getName(tipoIA);
 	}
 	
 	public function getMapa():Array<Array<Int>>

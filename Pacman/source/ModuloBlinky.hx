@@ -28,6 +28,8 @@ class ModuloBlinky extends Modulo
 	
 	public function new(mapa:Array<Array<Int>>, pacman:Pacman, gv:GestorValoresJuego, dots:FlxTypedGroup<Dot>) {
 		super(mapa);
+		
+		this.tipoIA = TipoIA.Blinky;
 		this.pacman = pacman;
 		this.dots = dots;
 		
@@ -38,11 +40,6 @@ class ModuloBlinky extends Modulo
 		
 		puntosElroy1 = gv.getForThisLevel(puntosElroyN);
 		puntosElroy2 = Std.int(puntosElroy1 / 2);
-	}
-	
-	override public function getNombre():String
-	{
-		return "Blinky";
 	}
 	
 	private function elroy():Void {

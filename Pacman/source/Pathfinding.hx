@@ -71,7 +71,7 @@ class Pathfinding
 		return mejorOpcion;
 	}
 	
-	static public function astar(inicio:FlxPoint, final:FlxPoint, mapa:Array<Array<Int>>):Int
+	static public function astar(inicio:FlxPoint, final:FlxPoint, mapa:Array<Array<Int>>, facingProhibido:Int = null):Int
 	{
 		var abiertos:Array<Nodo> = new Array<Nodo>();
 		var cerrados:Array<Nodo> = new Array<Nodo>();
@@ -131,6 +131,32 @@ class Pathfinding
 						y += 1;
 					case 3:
 						y -= 2;
+				}
+				
+				//Revisa que se pueda girar
+				if (facingProhibido != null && nodoT == nodoInicial) {
+					if (i == 0 && facingProhibido == FlxObject.LEFT) {
+						continue;
+					} else if (i == 1 && facingProhibido == FlxObject.RIGHT) {
+						continue;
+					} else if (i == 3 && facingProhibido == FlxObject.DOWN) {
+						continue;
+					} else if (i == 2 && facingProhibido == FlxObject.UP) {
+						continue;
+					}
+				}
+				
+				//Salida Y
+				if (y < 0) {
+					y = mapa.length - 1;
+				} else if (y >= mapa.length) {
+					y = 0;
+				}
+				//Salida X
+				if (x < 0) {
+					x = mapa[0].length - 1;
+				} else if (y >= mapa[0].length) {
+					x = 0;
 				}
 				
 				//Revisa que no sea pared

@@ -24,6 +24,9 @@ import Pathfinding;
  */
 class PlayState extends FlxState
 {
+	private var nombreJug:String;
+	private var tiposFantasma:Array<TipoIA>;
+	
 	private var endgame:Bool;
 	
 	private var gFantasmas:GestorFantasmas;
@@ -41,14 +44,18 @@ class PlayState extends FlxState
 	private var scoreTxt:FlxText;
 	private var score:Int = 0;
 	
+	override public function new(nombreJugador:String, fantasmas:Array<TipoIA>):Void {
+		super();
+		this.nombreJug = nombreJugador;
+		this.tiposFantasma = fantasmas;
+	}
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
 	override public function create():Void
 	{
 		super.create();
-		
-		var tiposFantasma:Array<TipoIA> = [TipoIA.Blinky, TipoIA.Pinky, TipoIA.Inky, TipoIA.Clyde];
 		endgame = false;
 		
 		//Lectura del mapa
@@ -141,12 +148,11 @@ class PlayState extends FlxState
 		
 		//GestorInforme
 		var nombreNivel:String = "Nivel 1";
-		var nombreJugador:String = "Nombre";
 		var nombresFant:Array<String> = new Array<String>();
 		for (i in gFantasmas.members) {
 			nombresFant.push(i.getIA().getNombre());
 		}
-		gInforme = new GestorInforme(nombreNivel,nombreJugador,nombresFant);
+		gInforme = new GestorInforme(nombreNivel,nombreJug,nombresFant);
 		
 		gFantasmas.empezarCicloSC();
 	}

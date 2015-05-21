@@ -14,17 +14,23 @@ import flixel.addons.ui.FlxInputText;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIText;
 
-import GestorFantasmas;
-
 /**
  * ...
  * @author Goldy
  */
 class SelectScreenState extends FlxUIState
 {
+	private var nombreJugador:String = null;
 	private var fantasmas:Array<TipoIA>;
 	private var showing:Array<Int>;
 	private var nombreI:FlxInputText;
+	private var punt:Int;
+	
+	override public function new(nombreJugador:String, punt:Int = -1):Void {
+		super();
+		this.nombreJugador = nombreJugador;
+		this.punt = punt;
+	}
 	
 	override public function create():Void
 	{
@@ -50,7 +56,19 @@ class SelectScreenState extends FlxUIState
 		//Input de nombre
 		nombreI = new FlxInputText(0, (myText.y + myText.size * 2), Std.int(w) , 'Jugador', 20, FlxColor.WHITE, FlxColor.BLACK);
 		nombreI.setFormat(20, FlxColor.WHITE, "center");
+		if (nombreJugador != null) {
+			nombreI.text = nombreJugador;
+		}
 		add(nombreI);
+		
+		//Puntuación
+		if (punt != -1) {
+			myText = new FlxText(0, h * 25, w); // x, y, width
+			myText.text = "Puntuación: " + punt;
+			myText.setFormat(30, FlxColor.WHITE, "center");
+			myText.setBorderStyle(FlxText.BORDER_OUTLINE, FlxColor.FOREST_GREEN, 1);
+			add(myText);
+		}
 		
 		//Mostrarios
 		var boton:FlxUIButton;

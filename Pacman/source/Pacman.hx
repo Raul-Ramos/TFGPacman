@@ -40,7 +40,7 @@ class Pacman extends FlxSprite
 		setFacingFlip(FlxObject.UP, false, false);
 		setFacingFlip(FlxObject.DOWN, false, false);
 		
-		setSize(46, 46); //39,39 en realidad
+		setSize(46, 46);
 		//offset.set(4, 6);
 		
 		animation.add("eat", [0, 1, 2, 1], 20, true);
@@ -120,7 +120,6 @@ class Pacman extends FlxSprite
 				
 			} //Si no, movimiento regular
 			else if (command && !blocMov) {
-				
 				
 				command = false;
 				

@@ -197,12 +197,22 @@ class PlayState extends FlxState
 	private function comerPunto(pacman:Pacman, dot:Dot):Void {
 		dot.kill();
 		actualizarPuntos(10);
+		checkGameEnds();
 	}
 	
 	private function comerPowerPellet(pacman:Pacman, pp:PowerPellet):Void {
 		pp.kill();
 		actualizarPuntos(50);
 		gFantasmas.iniciarFright();
+		checkGameEnds();
+	}
+	
+	private function checkGameEnds():Void {
+		if (dots.countLiving() == 0 && powerPellets.countLiving() == 0) {
+			endgame = true;
+			gInforme.victoria(dots.countDead(), powerPellets.countDead(), score);
+			endGame();
+		}
 	}
 	
 	private function pacmanFantasma(pacman:Pacman, spriteF:FlxSprite):Void {
@@ -210,12 +220,17 @@ class PlayState extends FlxState
 			var fantasma:Fantasma = gFantasmas.identificarFantasma(spriteF);
 			if (fantasma.getIA().isFrightened()) {
 				actualizarPuntos(gFantasmas.matar(fantasma));
+				gInforme.ghostAten++;
 			} else if (!fantasma.getIA().isDead()) {
 				endgame = true;
-				trace("te moriiste");
 				gInforme.muerte(fantasma.getIA().getNombre(), dots.countDead(), powerPellets.countDead(), score);
+				endGame();
 			}
 		}
+	}
+	
+	private function endGame() {
+		FlxG.switchState(new SelectScreenState(nombreJug, score));
 	}
 	
 	private function actualizarPuntos(suma:Int):Void {

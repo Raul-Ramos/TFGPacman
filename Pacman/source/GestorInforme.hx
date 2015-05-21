@@ -18,10 +18,12 @@ import flash.events.ProgressEvent;
 class GestorInforme
 {
 	#if flash
-	var fileRef:FileReference;
+	private var fileRef:FileReference;
 	#end
-	var root:Xml;
-	var tInicio:Int;
+	private var root:Xml;
+	private var tInicio:Int;
+	public var ghostAten:Int = 0; //TODO: MUY FEO
+	
 
 	public function new(nombreNivel:String,nombreJugador:String,nombresFant:Array<String>) 
 	{
@@ -54,16 +56,8 @@ class GestorInforme
 		
 		tInicio = flash.Lib.getTimer();
 	}
-	
-	public function muerte(fantasma:String, dots:Int, pp:Int, score:Int) {
-		var end:Xml = Xml.createElement('end');
-		
-		//Causa de la muerte
-		var puntero:Xml = Xml.createElement('data');
-		puntero.set('reason', 'killed');
-		puntero.addChild(Xml.createPCData(fantasma));
-		end.addChild(puntero);
-		
+
+	private function acabar(end:Xml, dots:Int, pp:Int, score:Int) {
 		//Puntos
 		var puntero:Xml = Xml.createElement('score');
 		puntero.addChild(Xml.createPCData(Std.string(score)));
@@ -77,6 +71,11 @@ class GestorInforme
 		//Power Pellet
 		var puntero:Xml = Xml.createElement('powerpellet');
 		puntero.addChild(Xml.createPCData(Std.string(pp)));
+		end.addChild(puntero);
+		
+		//Fantasmas muertos
+		var puntero:Xml = Xml.createElement('ghostEated');
+		puntero.addChild(Xml.createPCData(Std.string(ghostAten)));
 		end.addChild(puntero);
 		
 		//Tiempo
@@ -113,6 +112,29 @@ class GestorInforme
 		#end
 	}
 	
+	public function victoria(dots:Int, pp:Int, score:Int) {
+		var end:Xml = Xml.createElement('end');
+		
+		//Victoria
+		var puntero:Xml = Xml.createElement('data');
+		puntero.set('reason', 'victory');
+		end.addChild(puntero);
+		
+		acabar(end, dots, pp, score);
+	}
+	
+	public function muerte(fantasma:String, dots:Int, pp:Int, score:Int) {
+		var end:Xml = Xml.createElement('end');
+		
+		//Causa de la muerte
+		var puntero:Xml = Xml.createElement('data');
+		puntero.set('reason', 'killed');
+		puntero.addChild(Xml.createPCData(fantasma));
+		end.addChild(puntero);
+		
+		acabar(end, dots, pp, score);
+	}
+	
 	private function getVersion() {
 		var version:String = "Unknown";
 		#if windows
@@ -141,12 +163,12 @@ class GestorInforme
 
 	private function onSaveProgress(evt:ProgressEvent)
 	{ 
-		trace("Saved " + evt.bytesLoaded + " of " + evt.bytesTotal + " bytes."); 
+		//trace("Saved " + evt.bytesLoaded + " of " + evt.bytesTotal + " bytes."); 
 	} 
 	 
 	private function onSaveComplete(evt:Event)
 	{ 
-		trace("File saved."); 
+		//trace("File saved."); 
 		fileRef.removeEventListener(Event.SELECT, onSaveFileSelected); 
 		fileRef.removeEventListener(ProgressEvent.PROGRESS, onSaveProgress); 
 		fileRef.removeEventListener(Event.COMPLETE, onSaveComplete); 
@@ -155,7 +177,7 @@ class GestorInforme
 
 	private function onSaveCancel(evt:Event)
 	{ 
-		trace("The save request was canceled by the user."); 
+		//trace("The save request was canceled by the user."); 
 	}
 	#end
 }

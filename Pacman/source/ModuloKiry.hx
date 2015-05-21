@@ -68,6 +68,11 @@ class ModuloKiry extends Modulo
 		
 		res = Pathfinding.astar(origenXY, destinoXY, mapa, facing);
 		
+		if ( res == FlxObject.NONE) {
+			mapa[ypacman][xpacman] = 0;
+			res = Pathfinding.astar(origenXY, destinoXY, mapa, facing);
+		}
+		
 		if (res == FlxObject.ANY) {
 			res = Pathfinding.metodoTradicional(mapa, xthis, ythis, xpacman, ypacman, facing);
 		}

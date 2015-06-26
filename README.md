@@ -1,5 +1,7 @@
 # TFGPacman
 
+![alt tag](https://github.com/Raul-Ramos/TFGPacman/blob/master/prev.png)
+
 Resumen–
 En este trabajo se ha implementado un "remake" del videojuego Pac-Man original y se ha diseñado un fantasma nuevo
 que utiliza en su estrategia particularidades de un tipo de Inteligencia Artificial llamada ’Inteligencia Artificial
@@ -26,5 +28,3 @@ Artificial Intelligence, AI, Behavior based, Videogames, Pac-Man
 
 El repositorio incluye la implementación de software del proyecto.
 La memoria final del proyecto está pendiente de publicación.
-
-![alt tag](https://github.com/Raul-Ramos/TFGPacman/blob/master/prev.png)

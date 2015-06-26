@@ -27,3 +27,4 @@ Artificial Intelligence, AI, Behavior based, Videogames, Pac-Man
 El repositorio incluye la implementación de software del proyecto.
 La memoria final del proyecto está pendiente de publicación.
 
+![alt tag](https://github.com/Raul-Ramos/TFGPacman/blob/master/prev.png)

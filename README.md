@@ -2,18 +2,6 @@
 
 ![alt tag](https://github.com/Raul-Ramos/TFGPacman/blob/master/prev.png)
 
-Resumen–
-En este trabajo se ha implementado un "remake" del videojuego Pac-Man original y se ha diseñado un fantasma nuevo
-que utiliza en su estrategia particularidades de un tipo de Inteligencia Artificial llamada ’Inteligencia Artificial
-basada en comportamiento’, caracterizada por ser adaptable y utilizar elementos como el entorno, memoria,
-aprendizaje y coordinación con otras IA. Una vez finalizada la implementación, se han realizado pruebas con 21
-usuarios reales, analizando datos perceptuales y empíricos, y se ha concluido que este tipo de IA mejora la
-experiencia del jugador y que existen relaciones entre la complejidad de la IA, la dificultad que esta aporta al
-juego y el disfrute resultante que se experimenta.
-
-Palabras clave–
-Inteligencia Artificial, IA, Basada en comportamiento, Videojuegos, Pac-Man
-
 Abstract–
 In this project we implemented a remake of the original Pac-Man videogame has been re-made,
 including a new ghost that uses in its strategy characteristics of a type of Artificial Intelligence
@@ -25,3 +13,15 @@ and that there is a connection between AI complexity, the difficulty it contribu
 resulting enjoyment.
 Keywords–
 Artificial Intelligence, AI, Behavior based, Videogames, Pac-Man
+
+Resumen–
+En este trabajo se ha implementado un "remake" del videojuego Pac-Man original y se ha diseñado un fantasma nuevo
+que utiliza en su estrategia particularidades de un tipo de Inteligencia Artificial llamada ’Inteligencia Artificial
+basada en comportamiento’, caracterizada por ser adaptable y utilizar elementos como el entorno, memoria,
+aprendizaje y coordinación con otras IA. Una vez finalizada la implementación, se han realizado pruebas con 21
+usuarios reales, analizando datos perceptuales y empíricos, y se ha concluido que este tipo de IA mejora la
+experiencia del jugador y que existen relaciones entre la complejidad de la IA, la dificultad que esta aporta al
+juego y el disfrute resultante que se experimenta.
+
+Palabras clave–
+Inteligencia Artificial, IA, Basada en comportamiento, Videojuegos, Pac-Man

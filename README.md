@@ -25,6 +25,3 @@ and that there is a connection between AI complexity, the difficulty it contribu
 resulting enjoyment.
 Keywords–
 Artificial Intelligence, AI, Behavior based, Videogames, Pac-Man
-
-El repositorio incluye la implementación de software del proyecto.
-La memoria final del proyecto está pendiente de publicación.
